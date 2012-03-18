@@ -1,0 +1,48 @@
+du ingredient new $name [-d|--description $desc]
+du ingredient # list
+du ingredient edit $name
+du ingredient rm $name
+
+du drink new $name [-d|--description $desc]
+   # EDITOR:
+# ---
+# name: $name
+# description: >
+#    $desc
+# ingredients:
+#    - name: Lime Juice
+#      unit: shot
+#      amount: 1
+#      custom-volume:
+#      notes: <
+#         ...
+#    - name: Lime Juice
+#      unit: shot
+#      amount: 1
+#      custom-volume:
+#      notes: <
+#         ...
+du drink # list
+du drink edit $name [-d|--description $desc]
+   # EDITOR:
+# ---
+# name: $name
+# description: >
+#    $desc
+# ingredients:
+#    - name: Lime Juice
+#      unit: shot
+#      amount: 1
+#      custom-volume:
+#      notes: <
+#         ...
+#    - name: Lime Juice
+#      unit: shot
+#      amount: 1
+#      custom-volume:
+#      notes: <
+#         ...
+du drink rm
+
+du inv add $ingredient_name
+du inv rm  $ingredient_name
