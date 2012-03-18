@@ -82,12 +82,19 @@ my $fruba_libre = $s->resultset('Drink')->create({
    }],
 });
 
+   my $f = $s->resultset('User')->create({ name => 'frew' });
+
+   $f->add_to_ingredients($_) for $s->resultset('Ingredient')->search(undef, { rows => 3 })->all;
+
+   warn $_->name for $f->ingredients;
+
    $s
 }
 
 sub _plugins {
    "DU::App::Command::ingredient",
    "DU::App::Command::drink",
+   "DU::App::Command::inventory",
 }
 
 1;

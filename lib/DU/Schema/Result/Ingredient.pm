@@ -17,4 +17,7 @@ column description => {
    is_nullable => 1,
 };
 
+has_many inventory_items => '::InventoryItem', 'ingredient_id';
+has_many links_to_drink_ingredients => '::Drink_Ingredient', 'ingredient_id';
+
 1;
