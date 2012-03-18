@@ -26,6 +26,9 @@ my $tom_collins = $s->create_drink({
    }, {
       name => 'Lemon Juice',
       volume => .25,
+   }, {
+      name => 'Simple Syrup',
+      volume => 1 / 24,
    }],
 });
 
@@ -47,7 +50,7 @@ my $cuba_libre = $s->resultset('Drink')->create({
    }],
 });
 
-$s->resultset('Drink')->create({
+my $fruba_libre = $s->resultset('Drink')->create({
    description => 'A Delicious beverage of my own design',
    variant_of_drink_id => $cuba_libre->id,
    names => [{
@@ -72,4 +75,6 @@ $s->resultset('Drink')->create({
    }],
 });
 
+use DU::Util;
+print DU::Util::drink_as_markdown($_) for $s->resultset('Drink')->all;
 done_testing;
