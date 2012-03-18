@@ -3,6 +3,11 @@ package DU::Util;
 use 5.14.1;
 use warnings;
 
+use Sub::Exporter -setup => {
+   exports => [qw{
+      volume_with_unit drink_as_markdown single_item edit_data
+   }],
+};
 use Lingua::EN::Inflect 'PL';
 
 my %units_per_gill = (
@@ -68,5 +73,20 @@ sub single_item {
    }
 }
 
+sub edit_data {
+   my $data = shift;
+
+   require File::Temp;
+   require YAML::Syck;
+
+   my ($fh, $fn) = File::Temp::tempfile();
+   print {$fh} YAML::Syck::Dump($data);
+   close $fh;
+
+   system($ENV{EDITOR} || 'vi', $fn);
+
+   my $yaml = do { local (@ARGV, $/) = $fn; <> };
+   YAML::Syck::Load($yaml);
+}
 
 1;
