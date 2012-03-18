@@ -1,9 +1,9 @@
-package DU::App::Command::ingredient::Command::new;
+package DU::App::Command::ingredient::new;
 
 use 5.14.1;
 use warnings;
 
-use DU::App::Command::ingredient -command;
+use DU::App -command;
 use DU::Util;
 
 sub abstract { 'delete ingredient' }

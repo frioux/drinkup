@@ -1,9 +1,9 @@
-package DU::App::Command::ingredient::Command::list;
+package DU::App::Command::ingredient::list;
 
 use 5.14.1;
 use warnings;
 
-use DU::App::Command::ingredient -command;
+use DU::App -command;
 
 sub abstract { 'list ingredients' }
 
