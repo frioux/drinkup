@@ -6,9 +6,9 @@ use warnings;
 use DU::App -command;
 use DU::Util 'drink_as_markdown';
 
-sub abstract { 'list ingredients' }
+sub abstract { 'list drinks' }
 
-sub usage_desc { 'du ingredient list' }
+sub usage_desc { 'du drink list' }
 
 sub execute {
    my ($self, $opt, $args) = @_;

@@ -6,9 +6,9 @@ use warnings;
 use DU::App -command;
 use DU::Util;
 
-sub abstract { 'delete ingredient' }
+sub abstract { 'edit drink' }
 
-sub usage_desc { 'du ingredient rm $ingredient' }
+sub usage_desc { 'du drink edit $drink' }
 
 sub execute {
    my ($self, $opt, $args) = @_;
