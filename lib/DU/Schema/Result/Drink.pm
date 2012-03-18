@@ -9,6 +9,12 @@ primary_column id => {
 
 column description => { data_type => 'ntext' };
 
+column source => {
+   data_type   => 'nvarchar',
+   size        => 50,
+   is_nullable => 1,
+};
+
 column variant_of_drink_id => {
    data_type   => 'int',
    is_nullable => 1,
