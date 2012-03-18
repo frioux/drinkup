@@ -14,6 +14,21 @@ my $s = DU::Schema->connect({
 
 $s->deploy;
 
+my $tom_collins = $s->create_drink({
+   description => 'Refreshing beverage for a hot day',
+   name => 'Tom Collins',
+   ingredients => [{
+      name => 'Club Soda',
+      volume => 1,
+   }, {
+      name => 'Gin',
+      volume => .5,
+   }, {
+      name => 'Lemon Juice',
+      volume => .25,
+   }],
+});
+
 my $cuba_libre = $s->resultset('Drink')->create({
    description => 'Delicious drink all people should try',
    names => [{
