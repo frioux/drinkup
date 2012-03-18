@@ -9,7 +9,7 @@ primary_column id => {
 
 column drink_id => { data_type => 'int' };
 
-column name => {
+unique_column name => {
    data_type => 'nvarchar',
    size      => 50,
 };
