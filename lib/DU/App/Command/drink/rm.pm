@@ -16,8 +16,8 @@ sub execute {
    DU::Util::single_item(sub {
       $_[0]->delete;
 
-      say 'ingredient (' . $_[0]->name . ') deleted';
-   }, 'ingredient', $args->[0], $self->app->app->schema->resultset('Ingredient'));
+      say 'drink (' . $_[0]->name . ') deleted';
+   }, 'drink', $args->[0], $self->app->app->schema->resultset('Drink'));
 }
 
 1;
