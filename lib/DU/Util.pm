@@ -50,4 +50,23 @@ sub drink_as_markdown {
       "\n",
 }
 
+sub single_item {
+   my ($action, $name, $arg, $rs) = @_;
+
+   $rs = $rs->cli_find($arg);
+   my $count = $rs->count;
+   if ($count > 1) {
+      say "More than one $name found:";
+      my $x = 0;
+      print join '', map sprintf("%2d. %s\n", ++$x, $_->view), $rs->all;
+      exit 1;
+   } elsif ($count == 1) {
+      $action->($rs->single)
+   } else {
+      say "No $name «$arg» found";
+      exit 1;
+   }
+}
+
+
 1;
