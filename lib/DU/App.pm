@@ -85,5 +85,9 @@ my $fruba_libre = $s->resultset('Drink')->create({
    $s
 }
 
+sub _plugins {
+   "DU::App::Command::ingredient",
+   "DU::App::Command::drink",
+}
 
 1;
