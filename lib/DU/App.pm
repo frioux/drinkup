@@ -86,8 +86,6 @@ my $fruba_libre = $s->resultset('Drink')->create({
 
    $f->add_to_ingredients($_) for $s->resultset('Ingredient')->search(undef, { rows => 3 })->all;
 
-   warn $_->name for $f->ingredients;
-
    $s
 }
 
