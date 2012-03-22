@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use 5.14.1;
+use warnings;
+
+my $file = shift;
+open my $fh, '>', $file;
+my $yml = <<'YML';
+---
+description: A Delicious beverage of frew's own design
+name: Frewba Libre
+YML
+print $fh $yml;
+close $fh;
