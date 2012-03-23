@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More;
 
-use DU::Schema;
+use_ok 'DU::Schema';
 
 my $s = DU::Schema->connect({
    dsn => 'dbi:SQLite::memory:',
@@ -75,6 +75,4 @@ my $fruba_libre = $s->resultset('Drink')->create({
    }],
 });
 
-use DU::Util;
-print DU::Util::drink_as_markdown($_) for $s->resultset('Drink')->all;
 done_testing;
