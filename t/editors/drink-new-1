@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+
+use 5.14.1;
+use warnings;
+
+my $file = shift;
+open my $fh, '>', $file;
+my $yml = <<'YML';
+---
+name: Awesome bevvy
+description: YUMM
+ingredients:
+  -
+    name: ice
+    volume: 1
+YML
+print $fh $yml;
+close $fh;
