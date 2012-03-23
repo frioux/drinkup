@@ -149,9 +149,20 @@ subtest 'ingredient' => sub {
 
 subtest 'inventory' => sub {
    subtest 'add' => sub {
+      my $result = test_app('DU::App' => [qw(inventory add lime)]);
+      my @out = split /\n/, $result->stdout;
+      is_deeply \@out, [ 'ingredient (Lime Juice) added to inventory' ];
    };
 
    subtest 'ls' => sub {
+      my $result = test_app('DU::App' => [qw(inventory ls)]);
+      my @out = split /\n/, $result->stdout;
+      is_deeply \@out, [
+         '## Inventory',
+         ' * Club Soda',
+         ' * Gin',
+         ' * Lemon Juice',
+      ];
    };
 
    subtest 'rm' => sub {
