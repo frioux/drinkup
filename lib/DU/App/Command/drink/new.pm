@@ -4,7 +4,7 @@ use 5.14.1;
 use warnings;
 
 use DU::App -command;
-use DU::Util;
+use DU::Util qw(edit_data drink_as_markdown);
 
 sub abstract { 'create new drink' }
 
@@ -14,7 +14,7 @@ sub execute {
    my ($self, $opt, $args) = @_;
 
    my $i = $self->app->app->schema->create_drink(
-      DU::Util::edit_data({
+      edit_data({
          description => 'Refreshing beverage for a hot day',
          name => 'Tom Collins',
          ingredients => [{
@@ -33,9 +33,11 @@ sub execute {
       })
    );
 
+   $i->discard_changes;
+
+   print drink_as_markdown($i);
    say 'drink (' . $i->name . ') created';
 }
 
 1;
-
 
