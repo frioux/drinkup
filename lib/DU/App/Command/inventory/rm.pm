@@ -21,7 +21,7 @@ sub execute {
    DU::Util::single_item(sub {
       $_[0]->delete;
 
-      say 'ingredient (' . $_[0]->ingredient->name . ') deleted';
+      say 'ingredient (' . $_[0]->ingredient->name . ') removed from inventory';
    }, 'ingredient', $args->[0], $rs);
 }
 

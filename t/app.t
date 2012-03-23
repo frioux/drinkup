@@ -166,6 +166,9 @@ subtest 'inventory' => sub {
    };
 
    subtest 'rm' => sub {
+      my $result = test_app('DU::App' => [qw(inventory rm lemon)]);
+      my @out = split /\n/, $result->stdout;
+      is_deeply \@out, [ 'ingredient (Lemon Juice) removed from inventory' ];
    };
 };
 
