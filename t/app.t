@@ -6,12 +6,17 @@ use warnings;
 use Test::More;
 use App::Cmd::Tester;
 
-use DU::App;
+use lib 't/lib';
+
+use A;
+
+my $app = sub { A->app };
+
 local $ENV{PATH} = 't/editors:' . $ENV{PATH};
 
 subtest 'drink' => sub {
    subtest 'ls' => sub {
-      my $result = test_app('DU::App' => [qw(drink ls)]);
+      my $result = test_app($app->() => [qw(drink ls)]);
       my @out = split /\n/, $result->stdout;
       is_deeply \@out, [
          '## Tom Collins',
@@ -60,7 +65,7 @@ subtest 'drink' => sub {
 
    subtest 'new' => sub {
       local $ENV{EDITOR} = 'drink-new-1';
-      my $result = test_app('DU::App' => [qw(drink new frew)]);
+      my $result = test_app($app->() => [qw(drink new frew)]);
       my @out = split /\n/, $result->stdout;
       is_deeply \@out, [
          '## Awesome bevvy',
@@ -78,13 +83,13 @@ subtest 'drink' => sub {
    };
 
    subtest 'rm' => sub {
-      my $result = test_app('DU::App' => [qw(drink rm tom)]);
+      my $result = test_app($app->() => [qw(drink rm tom)]);
       is($result->stdout, "drink (Tom Collins) deleted\n", 'simple deletion works');
    };
 
    subtest 'edit' => sub {
       local $ENV{EDITOR} = 'drink-edit-1';
-      my $result = test_app('DU::App' => [qw(drink edit frew)]);
+      my $result = test_app($app->() => [qw(drink edit frew)]);
       my @out = split /\n/, $result->stdout;
       is_deeply \@out, [
          '## Frewba Libre',
@@ -107,7 +112,7 @@ subtest 'drink' => sub {
 subtest 'ingredient' => sub {
    subtest 'new' => sub {
       local $ENV{EDITOR} = 'ingredient-new-1';
-      my $result = test_app('DU::App' => [qw(ingredient new)]);
+      my $result = test_app($app->() => [qw(ingredient new)]);
       my @out = split /\n/, $result->stdout;
       is_deeply \@out, [
          'ingredient (copper coins) created',
@@ -115,7 +120,7 @@ subtest 'ingredient' => sub {
    };
 
    subtest 'ls' => sub {
-      my $result = test_app('DU::App' => [qw(ingredient ls)]);
+      my $result = test_app($app->() => [qw(ingredient ls)]);
       my @out = split /\n/, $result->stdout;
       is_deeply \@out, [
          '## Ingredients',
@@ -133,7 +138,7 @@ subtest 'ingredient' => sub {
 
    subtest 'edit' => sub {
       local $ENV{EDITOR} = 'ingredient-edit-1';
-      my $result = test_app('DU::App' => [qw(ingredient edit lime)]);
+      my $result = test_app($app->() => [qw(ingredient edit lime)]);
       my @out = split /\n/, $result->stdout;
       is_deeply \@out, [
          'ingredient (plastic buttons) updated',
@@ -141,7 +146,7 @@ subtest 'ingredient' => sub {
    };
 
    subtest 'rm' => sub {
-      my $result = test_app('DU::App' => [qw(ingredient rm lime)]);
+      my $result = test_app($app->() => [qw(ingredient rm lime)]);
       my @out = split /\n/, $result->stdout;
       is_deeply \@out, [ 'ingredient (Lime Juice) deleted' ];
    };
@@ -149,13 +154,13 @@ subtest 'ingredient' => sub {
 
 subtest 'inventory' => sub {
    subtest 'add' => sub {
-      my $result = test_app('DU::App' => [qw(inventory add lime)]);
+      my $result = test_app($app->() => [qw(inventory add lime)]);
       my @out = split /\n/, $result->stdout;
       is_deeply \@out, [ 'ingredient (Lime Juice) added to inventory' ];
    };
 
    subtest 'ls' => sub {
-      my $result = test_app('DU::App' => [qw(inventory ls)]);
+      my $result = test_app($app->() => [qw(inventory ls)]);
       my @out = split /\n/, $result->stdout;
       is_deeply \@out, [
          '## Inventory',
@@ -166,7 +171,7 @@ subtest 'inventory' => sub {
    };
 
    subtest 'rm' => sub {
-      my $result = test_app('DU::App' => [qw(inventory rm lemon)]);
+      my $result = test_app($app->() => [qw(inventory rm lemon)]);
       my @out = split /\n/, $result->stdout;
       is_deeply \@out, [ 'ingredient (Lemon Juice) removed from inventory' ];
    };
