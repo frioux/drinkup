@@ -1,4 +1,4 @@
-package DU::App::Command::drink::list;
+package DU::App::Command::drink::ls;
 
 use 5.14.1;
 use warnings;
@@ -8,7 +8,7 @@ use DU::Util 'drink_as_markdown';
 
 sub abstract { 'list drinks' }
 
-sub usage_desc { 'du drink list' }
+sub usage_desc { 'du drink ls' }
 
 sub execute {
    my ($self, $opt, $args) = @_;
