@@ -55,7 +55,7 @@ subtest 'drink' => sub {
          'A Delicious beverage of my own design',
          '',
          'Variant of Cuba Libre',
-     ];
+      ];
    };
 
    subtest 'new' => sub {
@@ -74,7 +74,7 @@ subtest 'drink' => sub {
          "YUMM",
          '',
          'drink (Awesome bevvy) created',
-     ];
+      ];
    };
 
    subtest 'rm' => sub {
@@ -100,7 +100,7 @@ subtest 'drink' => sub {
          '',
          '',
          'drink (Frewba Libre) updated',
-     ];
+      ];
    };
 };
 
@@ -111,16 +111,39 @@ subtest 'ingredient' => sub {
       my @out = split /\n/, $result->stdout;
       is_deeply \@out, [
          'ingredient (copper coins) created',
-     ];
+      ];
    };
 
    subtest 'ls' => sub {
+      my $result = test_app('DU::App' => [qw(ingredient ls)]);
+      my @out = split /\n/, $result->stdout;
+      is_deeply \@out, [
+         '## Ingredients',
+         ' * Club Soda',
+         ' * Gin',
+         ' * Lemon Juice',
+         ' * Simple Syrup',
+         ' * Coca Cola',
+         ' * Light Rum',
+         ' * Lime Juice',
+         ' * Dark Rum',
+         ' * Vanilla Extract',
+      ];
    };
 
    subtest 'edit' => sub {
+      local $ENV{EDITOR} = 'ingredient-edit-1';
+      my $result = test_app('DU::App' => [qw(ingredient edit lime)]);
+      my @out = split /\n/, $result->stdout;
+      is_deeply \@out, [
+         'ingredient (plastic buttons) updated',
+      ];
    };
 
    subtest 'rm' => sub {
+      my $result = test_app('DU::App' => [qw(ingredient rm lime)]);
+      my @out = split /\n/, $result->stdout;
+      is_deeply \@out, [ 'ingredient (Lime Juice) deleted' ];
    };
 };
 

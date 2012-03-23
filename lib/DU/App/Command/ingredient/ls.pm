@@ -1,4 +1,4 @@
-package DU::App::Command::ingredient::list;
+package DU::App::Command::ingredient::ls;
 
 use 5.14.1;
 use warnings;
