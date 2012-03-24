@@ -2,6 +2,13 @@
 
 use rlib;
 use DU::App;
+use Path::Class::File;
+use Config::ZOMG;
 
-DU::App->run;
+DU::App->new(
+   Config::ZOMG->new(
+      name => 'drinkup',
+      path => Path::Class::File->new(__FILE__)->dir->parent->stringify,
+   )->load
+)->run;
 
