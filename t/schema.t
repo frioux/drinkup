@@ -5,6 +5,9 @@ use warnings;
 
 use Test::More;
 
+use lib 't/lib';
+
+use A;
 use_ok 'DU::Schema';
 
 my $s = DU::Schema->connect({
@@ -12,7 +15,7 @@ my $s = DU::Schema->connect({
    quote_names => 1,
 });
 
-$s->deploy;
+A->_deploy_schema($s);
 
 my $tom_collins = $s->create_drink({
    description => 'Refreshing beverage for a hot day',

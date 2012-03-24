@@ -6,7 +6,30 @@ sub app {
    my $app = DU::App->new({ connect_info => { dsn => 'dbi:SQLite::memory:' }});
 
    my $s = $app->schema;
-   $s->deploy;
+
+   A->_deploy_schema($s);
+   A->_populate_schema($s);
+
+   $app
+}
+
+sub _deploy_schema {
+  my ($self, $schema) = @_;
+
+  require Path::Class;
+
+  my $filename = Path::Class::File->new(__FILE__)->dir
+    ->file('sqlite.sql')->stringify;
+  my $sql = do { local (@ARGV, $/) = $filename ; <> };
+  for my $chunk ( split (/;\s*\n+/, $sql) ) {
+    if ( $chunk =~ / ^ (?! --\s* ) \S /xm ) {  # there is some real sql in the chunk - a non-space at the start of the string which is not a comment
+      $schema->storage->dbh_do(sub { $_[1]->do($chunk) }) or print "Error on SQL: $chunk\n";
+    }
+  }
+}
+
+sub _populate_schema {
+   my ($self, $s) = @_;
 
 my $tom_collins = $s->create_drink({
    description => 'Refreshing beverage for a hot day',
@@ -72,8 +95,6 @@ my $fruba_libre = $s->resultset('Drink')->create({
    my $f = $s->resultset('User')->create({ name => 'frew' });
 
    $f->add_to_ingredients($_) for $s->resultset('Ingredient')->search(undef, { rows => 3 })->all;
-
-   $app
 }
 
 1;
