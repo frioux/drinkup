@@ -35,47 +35,34 @@ my $tom_collins = $s->create_drink({
    }],
 });
 
-my $cuba_libre = $s->resultset('Drink')->create({
-   description => 'Delicious drink all people should try',
-   names => [{
-      name => 'Cuba Libre',
-      order => 1,
-   }],
-   links_to_drink_ingredients => [{
-      volume => 1,
-      ingredient => { name => 'Coca Cola' },
-   }, {
-      volume => 0.5,
-      ingredient => { name => 'Light Rum' },
-   }, {
-      volume => 0.25,
-      ingredient => { name => 'Lime Juice' },
-   }],
+is $tom_collins->name, 'Tom Collins', 'Name of drink set correctly';
+
+my $links =$tom_collins->links_to_drink_ingredients->search(undef, {
+   order_by => 'ingredient.name',
+   prefetch => 'ingredient',
 });
 
-my $fruba_libre = $s->resultset('Drink')->create({
-   description => 'A Delicious beverage of my own design',
-   variant_of_drink_id => $cuba_libre->id,
-   names => [{
-      name => 'Frewba Libre',
-      order => 1,
-   }],
-   links_to_drink_ingredients => [{
-      volume => 1,
-      ingredient => { name => 'Coca Cola' },
-   }, {
-      volume => 0.5,
-      notes  => q(I recommend using either Myers's Original Dark Jamaican Rum,) .
-                q( or skip the vanilla extract and use the excellent black ) .
-                q(Kraken Rum.),
-      ingredient => { name => 'Dark Rum' },
-   }, {
-      volume => 0.25,
-      ingredient => { name => 'Lime Juice' },
-   }, {
-      arbitrary_volume => '3 drops',
-      ingredient => { name => 'Vanilla Extract' },
-   }],
+my @correct = ({
+   name => 'Club Soda',
+   volume => 1,
+}, {
+   name => 'Gin',
+   volume => .5,
+}, {
+   name => 'Lemon Juice',
+   volume => .25,
+}, {
+   name => 'Simple Syrup',
+   volume => 1 / 24,
 });
+
+my $i = 0;
+for ($links->all) {
+   is $_->ingredient->name, $correct[$i]->{name}, "${i}th name correct";
+   is $_->volume, $correct[$i]->{volume}, "${i}th volume correct";
+
+   $i++;
+}
+is $links->slice(0)->single->ingredient->name, 'Club Soda';
 
 done_testing;
