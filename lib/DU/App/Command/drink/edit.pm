@@ -19,11 +19,17 @@ sub execute {
          description => $_[0]->description,
          ingredients => [
             map +{
-               ( $_->arbitrary_volume
-                  ? ( arbitrary_volume => $_->arbitrary_volume )
+               ( $_->arbitrary_amount
+                  ? ( arbitrary_amount => $_->arbitrary_amount )
                   : ()
                ),
-               ( $_->volume ? ( volume => $_->volume ) : () ),
+               ( $_->unit
+                  ? (
+                     unit => $_->unit->name,
+                     amount => $_->amount,
+                  )
+                  : ()
+               ),
                ( $_->notes  ? ( notes  => $_->notes  ) : () ),
                name => $_->ingredient->name,
             }, $_[0]->links_to_drink_ingredients->all
@@ -36,18 +42,34 @@ sub execute {
       $_[0]->add_to_names({ name => $data->{name}, order => 1 });
 
       $_[0]->links_to_drink_ingredients->delete;
-      $_[0]->links_to_drink_ingredients->create(
+      for (@{$data->{ingredients}}) {
+         my @unit;
+         if ($_->{unit}) {
+            my $unit_id = $self->app->app->schema->resultset('Unit')
+               ->search({ name => $_->{unit} })
+               ->get_column('id')
+               ->single
+               or die "unknown unit $_->{unit} used";
+            @unit = ( unit_id => $unit_id )
+         }
+         $_[0]->links_to_drink_ingredients->create(
             +{
                ( $_->{arbitrary_volume}
                   ? ( arbitrary_volume => $_->{arbitrary_volume} )
                   : ()
                ),
-               ( $_->{volume} ? ( volume => $_->{volume} ) : () ),
+               ( $_->{unit}
+                  ? (
+                     @unit,
+                     amount => $_->{amount},
+                  )
+                  : ()
+               ),
                ( $_->{notes}  ? ( notes  => $_->{notes}  ) : () ),
                ingredient => { name => $_->{name} },
             }
-      ) for @{$data->{ingredients}};
-
+         );
+      }
       print drink_as_markdown($_[0]);
       say 'drink (' . $_[0]->name . ') updated';
    }, 'drink', $args->[0], $self->app->app->schema->resultset('Drink'));

@@ -5,12 +5,17 @@ use DU::Schema::Candy;
 column drink_id      => { data_type => 'int' };
 column ingredient_id => { data_type => 'int' };
 
-column volume => {
+column unit_id => {
+   data_type => 'int',
+   is_nullable => 1,
+};
+
+column amount => {
    data_type   => 'float',
    is_nullable => 1,
 };
 
-column arbitrary_volume => {
+column arbitrary_amount => {
    data_type   => 'nvarchar',
    size        => 50,
    is_nullable => 1,
@@ -23,6 +28,7 @@ column notes => {
 
 belongs_to drink      => '::Drink', 'drink_id';
 belongs_to ingredient => '::Ingredient', 'ingredient_id';
+belongs_to unit => '::Unit', 'unit_id';
 
 1;
 

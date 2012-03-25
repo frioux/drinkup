@@ -12,7 +12,8 @@ description: YUMM
 ingredients:
   -
     name: ice
-    volume: 1
+    unit: ounce
+    amount: 4
 YML
 print $fh $yml;
 close $fh;

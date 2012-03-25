@@ -5,6 +5,7 @@ use warnings;
 
 use Test::More;
 use App::Cmd::Tester;
+use Data::Dumper::Concise;
 
 use lib 't/lib';
 
@@ -17,15 +18,14 @@ local $ENV{PATH} = 't/editors:' . $ENV{PATH};
 subtest 'drink' => sub {
    subtest 'ls' => sub {
       my $result = test_app($app->() => [qw(drink ls)]);
-      my @out = split /\n/, $result->stdout;
-      is_deeply \@out, [
+      stdout_is($result, [
          '## Tom Collins',
          '',
          '## Ingredients',
          '',
-         ' * 4 shots of Club Soda',
-         ' * 2 shots of Gin',
-         ' * 1 shot of Lemon Juice',
+         ' * 4 ounces of Club Soda',
+         ' * 2 ounces of Gin',
+         ' * 1 ounce of Lemon Juice',
          ' * 1 teaspoon of Simple Syrup',
          '',
          '## Description',
@@ -36,9 +36,9 @@ subtest 'drink' => sub {
          '',
          '## Ingredients',
          '',
-         ' * 4 shots of Coca Cola',
-         ' * 2 shots of Light Rum',
-         ' * 1 shot of Lime Juice',
+         ' * 4 ounces of Coca Cola',
+         ' * 2 ounces of Light Rum',
+         ' * 1 ounce of Lime Juice',
          '',
          '## Description',
          '',
@@ -50,9 +50,9 @@ subtest 'drink' => sub {
          '',
          '## Ingredients',
          '',
-         ' * 4 shots of Coca Cola',
-         ' * 2 shots of Dark Rum',
-         ' * 1 shot of Lime Juice',
+         ' * 4 ounces of Coca Cola',
+         ' * 2 ounces of Dark Rum',
+         ' * 1 ounce of Lime Juice',
          ' * 3 drops of Vanilla Extract',
          '',
          '## Description',
@@ -60,38 +60,36 @@ subtest 'drink' => sub {
          'A Delicious beverage of my own design',
          '',
          'Variant of Cuba Libre',
-      ];
+      ]);
    };
 
    subtest 'new' => sub {
       local $ENV{EDITOR} = 'drink-new-1';
       my $result = test_app($app->() => [qw(drink new frew)]);
-      my @out = split /\n/, $result->stdout;
-      is_deeply \@out, [
+      stdout_is($result, [
          '## Awesome bevvy',
          '',
          '## Ingredients',
          '',
-         ' * 4 shots of ice',
+         ' * 4 ounces of ice',
          '',
          '## Description',
          '',
          "YUMM",
          '',
          'drink (Awesome bevvy) created',
-      ];
+      ]);
    };
 
    subtest 'rm' => sub {
       my $result = test_app($app->() => [qw(drink rm tom)]);
-      is($result->stdout, "drink (Tom Collins) deleted\n", 'simple deletion works');
+      stdout_is($result, ["drink (Tom Collins) deleted"], 'simple deletion works');
    };
 
    subtest 'edit' => sub {
       local $ENV{EDITOR} = 'drink-edit-1';
       my $result = test_app($app->() => [qw(drink edit frew)]);
-      my @out = split /\n/, $result->stdout;
-      is_deeply \@out, [
+      stdout_is($result, [
          '## Frewba Libre',
          '',
          '## Ingredients',
@@ -105,7 +103,7 @@ subtest 'drink' => sub {
          '',
          '',
          'drink (Frewba Libre) updated',
-      ];
+      ]);
    };
 };
 
@@ -113,16 +111,12 @@ subtest 'ingredient' => sub {
    subtest 'new' => sub {
       local $ENV{EDITOR} = 'ingredient-new-1';
       my $result = test_app($app->() => [qw(ingredient new)]);
-      my @out = split /\n/, $result->stdout;
-      is_deeply \@out, [
-         'ingredient (copper coins) created',
-      ];
+      stdout_is($result, [ 'ingredient (copper coins) created' ]);
    };
 
    subtest 'ls' => sub {
       my $result = test_app($app->() => [qw(ingredient ls)]);
-      my @out = split /\n/, $result->stdout;
-      is_deeply \@out, [
+      stdout_is($result, [
          '## Ingredients',
          ' * Club Soda',
          ' * Gin',
@@ -133,48 +127,53 @@ subtest 'ingredient' => sub {
          ' * Lime Juice',
          ' * Dark Rum',
          ' * Vanilla Extract',
-      ];
+      ]);
    };
 
    subtest 'edit' => sub {
       local $ENV{EDITOR} = 'ingredient-edit-1';
       my $result = test_app($app->() => [qw(ingredient edit lime)]);
-      my @out = split /\n/, $result->stdout;
-      is_deeply \@out, [
+      stdout_is($result, [
          'ingredient (plastic buttons) updated',
-      ];
+      ]);
    };
 
    subtest 'rm' => sub {
       my $result = test_app($app->() => [qw(ingredient rm lime)]);
-      my @out = split /\n/, $result->stdout;
-      is_deeply \@out, [ 'ingredient (Lime Juice) deleted' ];
+      stdout_is($result, [ 'ingredient (Lime Juice) deleted' ]);
    };
 };
 
 subtest 'inventory' => sub {
    subtest 'add' => sub {
       my $result = test_app($app->() => [qw(inventory add lime)]);
-      my @out = split /\n/, $result->stdout;
-      is_deeply \@out, [ 'ingredient (Lime Juice) added to inventory' ];
+      stdout_is($result, [ 'ingredient (Lime Juice) added to inventory' ]);
    };
 
    subtest 'ls' => sub {
       my $result = test_app($app->() => [qw(inventory ls)]);
-      my @out = split /\n/, $result->stdout;
-      is_deeply \@out, [
+      stdout_is($result, [
          '## Inventory',
          ' * Club Soda',
          ' * Gin',
          ' * Lemon Juice',
-      ];
+      ]);
    };
 
    subtest 'rm' => sub {
       my $result = test_app($app->() => [qw(inventory rm lemon)]);
-      my @out = split /\n/, $result->stdout;
-      is_deeply \@out, [ 'ingredient (Lemon Juice) removed from inventory' ];
+      stdout_is($result, [ 'ingredient (Lemon Juice) removed from inventory' ]);
    };
 };
 
 done_testing;
+
+sub stdout_is {
+   my ( $result, $expected, $reason ) = @_;
+
+   my @out = split /\n/, $result->stdout;
+   is_deeply(\@out, $expected, $reason || ()) or diag(Dumper({
+      stdout => \@out,
+      stderr => [split /\n/, $result->stderr],
+   })), die 'end';
+}

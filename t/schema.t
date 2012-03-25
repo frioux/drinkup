@@ -17,22 +17,36 @@ my $s = DU::Schema->connect({
 
 A->_deploy_schema($s);
 
+$s->resultset('Unit')->populate([
+   [qw(name gills)],
+   [ounce      => 1 / 4         ] ,
+   [tablespoon => 1 / 4 / 2     ] ,
+   [teaspoon   => 1 / 4 / 2 / 3 ] ,
+   [dash       => undef         ] ,
+]);
+
+my @correct = ({
+   name => 'Club Soda',
+   unit => 'ounce',
+   amount => 4,
+}, {
+   name => 'Gin',
+   unit => 'ounce',
+   amount => 2,
+}, {
+   name => 'Lemon Juice',
+   unit => 'ounce',
+   amount => 1,
+}, {
+   name => 'Simple Syrup',
+   unit => 'teaspoon',
+   amount => 1,
+});
+
 my $tom_collins = $s->create_drink({
    description => 'Refreshing beverage for a hot day',
    name => 'Tom Collins',
-   ingredients => [{
-      name => 'Club Soda',
-      volume => 1,
-   }, {
-      name => 'Gin',
-      volume => .5,
-   }, {
-      name => 'Lemon Juice',
-      volume => .25,
-   }, {
-      name => 'Simple Syrup',
-      volume => 1 / 24,
-   }],
+   ingredients => \@correct,
 });
 
 is $tom_collins->name, 'Tom Collins', 'Name of drink set correctly';
@@ -42,24 +56,11 @@ my $links =$tom_collins->links_to_drink_ingredients->search(undef, {
    prefetch => 'ingredient',
 });
 
-my @correct = ({
-   name => 'Club Soda',
-   volume => 1,
-}, {
-   name => 'Gin',
-   volume => .5,
-}, {
-   name => 'Lemon Juice',
-   volume => .25,
-}, {
-   name => 'Simple Syrup',
-   volume => 1 / 24,
-});
-
 my $i = 0;
 for ($links->all) {
    is $_->ingredient->name, $correct[$i]->{name}, "${i}th name correct";
-   is $_->volume, $correct[$i]->{volume}, "${i}th volume correct";
+   is $_->amount, $correct[$i]->{amount}, "${i}th amount correct";
+   is $_->unit->name, $correct[$i]->{unit}, "${i}th unit correct";
 
    $i++;
 }

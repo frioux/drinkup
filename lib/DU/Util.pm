@@ -10,26 +10,16 @@ use Sub::Exporter -setup => {
 };
 use Lingua::EN::Inflect 'PL';
 
-my %units_per_gill = (
-   4 => 'shot',
-   8 => 'tablespoon',
-   24 => 'teaspoon',
-);
-
 sub volume_with_unit {
    my $d_i = shift;
 
-   my $v = $d_i->arbitrary_volume;
+   my $v = $d_i->arbitrary_amount;
 
    return $v if $v;
 
-   my $volume = $d_i->volume;
+   return $d_i->amount . ' ' . PL($d_i->unit->name, $d_i->amount) if $d_i->unit;
 
-   for (sort { $a <=> $b } keys %units_per_gill) {
-      my $conv = $volume * $_;
-      return $conv . ' ' . PL($units_per_gill{$_}, $conv)
-         if abs($conv - int $conv) < 0.0001;
-   }
+   return '???'
 }
 
 sub drink_as_markdown {

@@ -17,24 +17,41 @@ sub create_drink {
       unless $args->{ingredients} and
          ref $args->{ingredients} eq 'ARRAY';
 
+   my @links = map {
+      my @unit;
+      if ($_->{unit}) {
+         my $unit_id = $self->resultset('Unit')
+            ->search({ name => $_->{unit} })
+            ->get_column('id')
+            ->single
+            or die "unknown unit $_->{unit} used";
+         @unit = ( unit_id => $unit_id )
+      }
+
+      +{
+         ( $_->{arbitrary_amount}
+            ? ( arbitrary_amount => $_->{arbitrary_amount} )
+            : ()
+         ),
+         @unit,
+
+         ( $_->{notes}  ? ( notes  => $_->{notes}  ) : () ),
+         ( $_->{amount}  ? ( amount  => $_->{amount}  ) : () ),
+         ( $_->{amount}  ? ( amount  => $_->{amount}  ) : () ),
+         ingredient => { name => $_->{name} },
+      }
+   }  @{$args->{ingredients}};
    $self->resultset('Drink')->create({
       description => $args->{description},
+      ( $args->{variant_of_drink}
+         ? ( variant_of_drink  => $args->{variant_of_drink}  )
+         : ()
+      ),
       names => [{
          name => $args->{name},
          order => 1,
       }],
-      links_to_drink_ingredients => [
-         map {
-            +{
-               ( $_->{arbitrary_volume}
-                  ? ( arbitrary_volume => $_->{arbitrary_volume} )
-                  : ()
-               ),
-               ( $_->{volume} ? ( volume => $_->{volume} ) : () ),
-               ( $_->{notes}  ? ( notes  => $_->{notes}  ) : () ),
-               ingredient => { name => $_->{name} },
-            }
-         }  @{$args->{ingredients}}],
+      links_to_drink_ingredients => \@links,
    })
 }
 

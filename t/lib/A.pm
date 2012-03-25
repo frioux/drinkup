@@ -31,64 +31,76 @@ sub _deploy_schema {
 sub _populate_schema {
    my ($self, $s) = @_;
 
+   $s->resultset('Unit')->populate([
+      [qw(name gills)],
+      [ounce      => 1 / 4         ] ,
+      [tablespoon => 1 / 4 / 2     ] ,
+      [teaspoon   => 1 / 4 / 2 / 3 ] ,
+      [dash       => undef         ] ,
+   ]);
+
 my $tom_collins = $s->create_drink({
    description => 'Refreshing beverage for a hot day',
    name => 'Tom Collins',
    ingredients => [{
       name => 'Club Soda',
-      volume => 1,
+      unit => 'ounce',
+      amount => 4,
    }, {
       name => 'Gin',
-      volume => .5,
+      unit => 'ounce',
+      amount => 2,
    }, {
       name => 'Lemon Juice',
-      volume => .25,
+      unit => 'ounce',
+      amount => 1,
    }, {
       name => 'Simple Syrup',
-      volume => 1 / 24,
+      unit => 'teaspoon',
+      amount => 1,
    }],
 });
 
-my $cuba_libre = $s->resultset('Drink')->create({
+my $cuba_libre = $s->create_drink({
    description => 'Delicious drink all people should try',
-   names => [{
-      name => 'Cuba Libre',
-      order => 1,
-   }],
-   links_to_drink_ingredients => [{
-      volume => 1,
-      ingredient => { name => 'Coca Cola' },
+   name => 'Cuba Libre',
+   ingredients => [{
+      unit => 'ounce',
+      amount => 4,
+      name => 'Coca Cola',
    }, {
-      volume => 0.5,
-      ingredient => { name => 'Light Rum' },
+      unit => 'ounce',
+      amount => 2,
+      name => 'Light Rum',
    }, {
-      volume => 0.25,
-      ingredient => { name => 'Lime Juice' },
+      unit => 'ounce',
+      amount => 1,
+      name => 'Lime Juice',
    }],
 });
 
-my $fruba_libre = $s->resultset('Drink')->create({
+my $fruba_libre = $s->create_drink({
    description => 'A Delicious beverage of my own design',
-   variant_of_drink_id => $cuba_libre->id,
-   names => [{
-      name => 'Frewba Libre',
-      order => 1,
-   }],
-   links_to_drink_ingredients => [{
-      volume => 1,
-      ingredient => { name => 'Coca Cola' },
+   variant_of_drink => $cuba_libre,
+   name => 'Frewba Libre',
+   ingredients => [{
+      unit => 'ounce',
+      amount => 4,
+      name => 'Coca Cola',
    }, {
-      volume => 0.5,
+      unit => 'ounce',
+      amount => 2,
       notes  => q(I recommend using either Myers's Original Dark Jamaican Rum,) .
                 q( or skip the vanilla extract and use the excellent black ) .
                 q(Kraken Rum.),
-      ingredient => { name => 'Dark Rum' },
+      name => 'Dark Rum',
    }, {
-      volume => 0.25,
-      ingredient => { name => 'Lime Juice' },
+      unit => 'ounce',
+      amount => 1,
+      name => 'Lime Juice',
    }, {
-      arbitrary_volume => '3 drops',
-      ingredient => { name => 'Vanilla Extract' },
+      arbitrary_amount => '3 drops',
+      name => 'Vanilla Extract',
    }],
 });
 
