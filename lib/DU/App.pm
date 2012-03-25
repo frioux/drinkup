@@ -31,6 +31,7 @@ sub _plugins {
    "DU::App::Command::ingredient",
    "DU::App::Command::drink",
    "DU::App::Command::inventory",
+   "DU::App::Command::maint",
 }
 
 1;
