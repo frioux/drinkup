@@ -82,13 +82,13 @@ subtest 'drink' => sub {
    };
 
    subtest 'rm' => sub {
-      my $result = test_app($app => [qw(drink rm tom)]);
+      my $result = test_app($app => [qw(drink rm), 'tom*']);
       stdout_is($result, ["drink (Tom Collins) deleted"], 'simple deletion works');
    };
 
    subtest 'edit' => sub {
       local $ENV{EDITOR} = 'drink-edit-1';
-      my $result = test_app($app => [qw(drink edit frew)]);
+      my $result = test_app($app => [qw(drink edit), 'frewba libre']);
       stdout_is($result, [
          '## Frewba Libre',
          '',
@@ -134,21 +134,21 @@ subtest 'ingredient' => sub {
 
    subtest 'edit' => sub {
       local $ENV{EDITOR} = 'ingredient-edit-1';
-      my $result = test_app($app => [qw(ingredient edit lime)]);
+      my $result = test_app($app => [qw(ingredient edit), 'lime *']);
       stdout_is($result, [
          'ingredient (plastic buttons) updated',
       ]);
    };
 
    subtest 'rm' => sub {
-      my $result = test_app($app => [qw(ingredient rm syrup)]);
+      my $result = test_app($app => [qw(ingredient rm), 'simple syrup']);
       stdout_is($result, [ 'ingredient (Simple Syrup) deleted' ]);
    };
 };
 
 subtest 'inventory' => sub {
    subtest 'add' => sub {
-      my $result = test_app($app => [qw(inventory add cola)]);
+      my $result = test_app($app => [qw(inventory add), '* cola']);
       stdout_is($result, [ 'ingredient (Coca Cola) added to inventory' ]);
    };
 
@@ -164,7 +164,7 @@ subtest 'inventory' => sub {
    };
 
    subtest 'rm' => sub {
-      my $result = test_app($app => [qw(inventory rm lemon)]);
+      my $result = test_app($app => [qw(inventory rm), 'lemon juice']);
       stdout_is($result, [ 'ingredient (Lemon Juice) removed from inventory' ]);
    };
 };

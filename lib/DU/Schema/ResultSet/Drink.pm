@@ -7,7 +7,7 @@ use parent 'DU::Schema::ResultSet';
 
 sub cli_find {
    $_[0]->search({
-      "names.name" => { -like => "%$_[1]%" }
+      'names.name' => $_[0]->_glob_to_like($_[1]),
    }, {
       join => 'names',
    })
