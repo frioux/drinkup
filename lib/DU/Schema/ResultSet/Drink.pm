@@ -62,8 +62,8 @@ sub none {
    $self->search({ id => { -in => $ids } })
 }
 
-sub every {
-   my ($self, $user) = @_;
+sub nearly {
+   my ($self, $user, $less) = @_;
 
    my $ii = $self->result_source->schema->resultset('InventoryItem')
       ->search({
@@ -92,16 +92,18 @@ sub every {
 
    my $creation = \[
    <<"SQL",
-      SELECT ri.drink_id FROM (
-         $ri_sql ri,
+      SELECT di.drink_id FROM (
+         $ri_sql di,
          $ii_sql ii
       )
-      WHERE ri.drink_id = ii.drink_id AND
-            ri.ingredient_count = ii.ingredient_count
+      WHERE di.drink_id = ii.drink_id AND
+            di.ingredient_count = ii.ingredient_count + ?
 SQL
-   @ri_bind, @ii_bind ];
+   @ri_bind, @ii_bind, [ { sqlt_datatype => 'int' } => $less ] ];
 
    $self->search({ 'me.id' => { -in => $creation } });
 }
+
+sub every { $_[0]->nearly($_[1], 0) }
 
 1;
