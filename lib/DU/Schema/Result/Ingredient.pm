@@ -1,8 +1,26 @@
 package DU::Schema::Result::Ingredient;
 
-use DU::Schema::Candy;
+use DU::Schema::Candy
+   -components => ['+DBICx::MaterializedPath']
+   ;
 
 primary_column id => {
+   data_type         => 'int',
+   is_auto_increment => 1,
+};
+
+column parent => {
+   data_type   => 'int',
+   is_nullable => 1,
+};
+
+column materialized_path => {
+   data_type   => 'varchar',
+   size        => 255,
+   is_nullable => 1,
+};
+
+column id => {
    data_type         => 'int',
    is_auto_increment => 1,
 };
