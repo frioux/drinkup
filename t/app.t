@@ -128,6 +128,7 @@ subtest 'ingredient' => sub {
          ' * Dark Rum',
          ' * Vanilla Extract',
          ' * ice',
+         ' * coin',
          ' * copper coins',
       ]);
    };
@@ -175,8 +176,9 @@ sub stdout_is {
    my ( $result, $expected, $reason ) = @_;
 
    my @out = split /\n/, $result->stdout;
+   local $Test::Builder::Level = $Test::Builder::Level + 1;
    is_deeply(\@out, $expected, $reason || ()) or diag(Dumper({
       stdout => \@out,
       stderr => [split /\n/, $result->stderr],
-   })), die 'end';
+   })), die 'so long cruel world';
 }

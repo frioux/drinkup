@@ -9,6 +9,7 @@ my $yml = <<'YML';
 ---
 name: copper coins
 description: blood
+isa: coin
 YML
 print $fh $yml;
 close $fh;

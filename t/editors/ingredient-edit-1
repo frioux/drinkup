@@ -9,6 +9,7 @@ my $yml = <<'YML';
 ---
 name: plastic buttons
 description: eyeball
+isa: button
 YML
 print $fh $yml;
 close $fh;

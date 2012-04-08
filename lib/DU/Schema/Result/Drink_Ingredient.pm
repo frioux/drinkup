@@ -2,8 +2,8 @@ package DU::Schema::Result::Drink_Ingredient;
 
 use DU::Schema::Candy;
 
-column drink_id      => { data_type => 'int' };
-column ingredient_id => { data_type => 'int' };
+primary_column drink_id      => { data_type => 'int' };
+primary_column ingredient_id => { data_type => 'int' };
 
 column unit_id => {
    data_type => 'int',
