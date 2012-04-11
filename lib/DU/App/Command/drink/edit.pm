@@ -17,6 +17,7 @@ sub execute {
       my $data = DU::Util::edit_data({
          name => $_[0]->name,
          description => $_[0]->description,
+         source => $_[0]->source,
          ingredients => [
             map +{
                ( $_->arbitrary_amount
@@ -36,7 +37,10 @@ sub execute {
          ],
       });
 
-      $_[0]->update({ description => $data->{description} });
+      $_[0]->update({
+         description => $data->{description},
+         source      => $data->{source},
+      });
 
       $_[0]->names->delete;
       $_[0]->add_to_names({ name => $data->{name}, order => 1 });

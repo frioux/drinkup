@@ -77,6 +77,8 @@ subtest 'drink' => sub {
          '',
          "YUMM",
          '',
+         q(Source: Boy's Life),
+         '',
          'drink (Awesome bevvy) created',
       ]);
    };
@@ -100,6 +102,8 @@ subtest 'drink' => sub {
          "A Delicious beverage of frew's own design",
          '',
          'Variant of Cuba Libre',
+         '',
+         'Source: TV Guide wtf?',
          '',
          '',
          'drink (Frewba Libre) updated',

@@ -43,6 +43,7 @@ sub create_drink {
    }  @{$args->{ingredients}};
    $self->resultset('Drink')->create({
       description => $args->{description},
+      source => $args->{source},
       ( $args->{variant_of_drink}
          ? ( variant_of_drink  => $args->{variant_of_drink}  )
          : ()

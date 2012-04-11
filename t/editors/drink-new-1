@@ -9,6 +9,7 @@ my $yml = <<'YML';
 ---
 name: Awesome bevvy
 description: YUMM
+source: Boy's Life
 ingredients:
   -
     name: ice

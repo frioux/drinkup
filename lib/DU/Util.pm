@@ -42,6 +42,9 @@ sub drink_as_markdown {
       ( $drink->variants->count ? (
          '', 'Variants: ' . join ', ', map $_->name, $drink->variants->all,
       ) : () ),
+      ( $drink->source ? (
+         '', 'Source: ' . $drink->source
+      ) : () ),
       "\n",
 }
 

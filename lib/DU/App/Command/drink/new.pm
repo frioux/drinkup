@@ -17,6 +17,7 @@ sub execute {
       edit_data({
          description => 'Refreshing beverage for a hot day',
          name => 'Tom Collins',
+         source => '500 Cocktails, p27',
          ingredients => [{
             name => 'Club Soda',
             volume => 1,

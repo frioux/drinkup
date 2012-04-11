@@ -9,6 +9,7 @@ my $yml = <<'YML';
 ---
 description: A Delicious beverage of frew's own design
 name: Frewba Libre
+source: TV Guide wtf?
 YML
 print $fh $yml;
 close $fh;
