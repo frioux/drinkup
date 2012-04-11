@@ -27,4 +27,29 @@ belongs_to kind_of => '::Ingredient', 'kind_of_id', { join_type => 'left' };
 has_many inventory_items => '::InventoryItem', 'ingredient_id';
 has_many links_to_drink_ingredients => '::Drink_Ingredient', 'ingredient_id';
 
+belongs_to
+   kind_of => '::Ingredient',
+   sub {
+      my $args = shift;
+
+      my $path_separator = q(/);
+      my $rest = "$path_separator%";
+
+      return ({
+         "$args->{self_alias}.materialized_path" => {
+            -like => {
+               -concat => [
+                  { -ident => "$args->{foreign_alias}.materialized_path" },
+                  $rest
+               ]
+            }
+         }
+      },
+      $args->{self_rowobj} && {
+         "$args->{foreign_alias}.id" => {
+            -in => split qr(/), $args->{self_rowobj}->materialized_path
+         }
+      });
+   };
+
 1;
