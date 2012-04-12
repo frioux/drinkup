@@ -66,4 +66,29 @@ for ($links->all) {
 }
 is $links->slice(0)->single->ingredient->name, 'Club Soda';
 
+subtest kinds => sub {
+   my $ings = $s->resultset('Ingredient');
+
+   my $rum = $ings->create({ name => 'Rum' });
+   my $dark_rum = $rum->direct_kinds->create({ name => 'Dark Rum' });
+   $dark_rum->direct_kinds->create({ name => q(Myers's Jamaican Rum) });
+   $rum->direct_kinds->create({ name => 'Gold Rum' });
+   $rum->direct_kinds->create({ name => 'Black Rum' });
+   $rum->direct_kinds->create({ name => 'Spiced Rum' });
+
+   is( $rum->direct_kinds->count, 4, 'direct kinds all created');
+   is( $rum->kinds->count, 4 + 1 + 1, 'kinds count is correct');
+   is( $dark_rum->direct_kind_of->name, 'Rum', 'direct_kind_of is correct for dark rum');
+   $rum->discard_changes; # why do I have to do this?
+   ok(!$rum->direct_kind_of, 'Rum is not a kind of anything');
+
+   my $liquor = $ings->create({ name => 'Liquor' });
+   $rum->kind_of_id($liquor->id);
+   $rum->update;
+   $rum->discard_changes;
+   $dark_rum->discard_changes;
+   is( $liquor->kinds->count, 4 + 1 + 1 + 1, 'kinds count for liquor is correct');
+   is( $dark_rum->kind_of->count, 3, 'dark rum is dark rum, rum, and liquor');
+};
+
 done_testing;
