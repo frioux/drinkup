@@ -4,6 +4,7 @@ use 5.14.1;
 use warnings;
 
 use Test::More;
+use Test::Deep;
 
 use lib 't/lib';
 
@@ -89,6 +90,41 @@ subtest kinds => sub {
    $dark_rum->discard_changes;
    is( $liquor->kinds->count, 4 + 1 + 1 + 1, 'kinds count for liquor is correct');
    is( $dark_rum->kind_of->count, 3, 'dark rum is dark rum, rum, and liquor');
+};
+
+subtest searches => sub {
+   my $s = DU::Schema->connect({
+      dsn => 'dbi:SQLite::memory:',
+      quote_names => 1,
+   });
+   A->_deploy_schema($s);
+   A->_populate_schema($s);
+
+   my $d = $s->resultset('Drink');
+   my $f = $s->resultset('User')->first;
+
+   $f->add_to_ingredients($_)
+      for $s->resultset('Ingredient')->search({
+         name => ['Simple Syrup', 'Vanilla Extract' ],
+      })->all;
+
+   cmp_deeply(
+      [ sort map $_->name, $d->none($f)->all ],
+      [ 'Cuba Libre' ],
+      'none'
+   );
+
+   cmp_deeply(
+      [ sort map $_->name, $d->some($f)->all ],
+      [ 'Frewba Libre', 'Tom Collins' ],
+      'some'
+   );
+
+   cmp_deeply(
+      [ sort map $_->name, $d->every($f)->all ],
+      [ 'Tom Collins', ],
+      'every'
+   );
 };
 
 done_testing;
