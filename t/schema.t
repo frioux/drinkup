@@ -120,10 +120,28 @@ subtest searches => sub {
       'some'
    );
 
+   $f->inventory_items->search({
+      'ingredient.name' => 'Lemon Juice',
+   }, {
+      join => 'ingredient',
+   })->delete;
+
+   my $lemon_juice = $s->resultset('Ingredient')->search({ name => 'Lemon Juice' })
+      ->single;
+
+   my $sl = $lemon_juice->direct_kinds->create({ name => 'Sunkist Lemon Juice' });
+
+   cmp_deeply(
+      [ sort map $_->name, $d->every($f)->all ],
+      [ ],
+      'every'
+   );
+   $f->add_to_ingredients($sl);
+
    cmp_deeply(
       [ sort map $_->name, $d->every($f)->all ],
       [ 'Tom Collins', ],
-      'every'
+      'every (post kind_of addition)'
    );
 };
 
