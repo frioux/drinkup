@@ -65,11 +65,11 @@ sub none {
 sub nearly {
    my ($self, $user, $less) = @_;
 
-   my $ii = $self->result_source->schema->resultset('InventoryItem')
+   my $ingredients_on_hand = $self->result_source->schema->resultset('InventoryItem')
       ->search({
          'me.user_id' => $user->id
       }, {
-         join => { ingredient => 'links_to_drink_ingredients' },
+         join => { ingredient => { kind_of => 'links_to_drink_ingredients' } },
          columns => {
             drink_id => 'links_to_drink_ingredients.drink_id',
             ingredient_count => { count => '*', -as => 'ingredient_count' },
@@ -78,7 +78,7 @@ sub nearly {
       })->as_query;
 
 
-   my $ri = $self->result_source->schema->resultset('Drink_Ingredient')
+   my $required_ingredients = $self->result_source->schema->resultset('Drink_Ingredient')
       ->search(undef, {
          columns => {
             drink_id => 'me.drink_id',
@@ -87,19 +87,19 @@ sub nearly {
          group_by => 'me.drink_id',
       })->as_query;
 
-   my ($ii_sql, @ii_bind) = @{$$ii};
-   my ($ri_sql, @ri_bind) = @{$$ri};
+   my ($ioh_sql, @ioh_bind) = @{$$ingredients_on_hand};
+   my ($ri_sql, @ri_bind) = @{$$required_ingredients};
 
    my $creation = \[
    <<"SQL",
       SELECT di.drink_id FROM (
          $ri_sql di,
-         $ii_sql ii
+         $ioh_sql ii
       )
       WHERE di.drink_id = ii.drink_id AND
             di.ingredient_count = ii.ingredient_count + ?
 SQL
-   @ri_bind, @ii_bind, [ { sqlt_datatype => 'int' } => $less ] ];
+   @ri_bind, @ioh_bind, [ { sqlt_datatype => 'int' } => $less ] ];
 
    $self->search({ 'me.id' => { -in => $creation } });
 }
