@@ -17,7 +17,7 @@ sub execute {
       my $edit = DU::Util::edit_data({
          name => $_[0]->name,
          description => $_[0]->description,
-         ($_[0]->kind_of_id ? ( isa => $_[0]->kind_of->name ) : ()),
+         ($_[0]->kind_of_id ? ( isa => $_[0]->direct_kind_of->name ) : ()),
       });
       if (my $p_name = delete $edit->{isa}) {
          my $p = $self->app->app->schema->resultset('Ingredient')->find_or_create({
