@@ -184,5 +184,6 @@ sub stdout_is {
    is_deeply(\@out, $expected, $reason || ()) or diag(Dumper({
       stdout => \@out,
       stderr => [split /\n/, $result->stderr],
+      error  => $result->error,
    })), die 'so long cruel world';
 }
