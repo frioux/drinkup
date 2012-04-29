@@ -18,11 +18,11 @@ sub some {
    my ($self, $user) = @_;
 
    my $ids = $self->search({
-      'ingredient.id' => {
+      'kind_of.id' => {
          -in => $user->inventory_items->get_column('ingredient_id')->as_query
       },
    }, {
-      join => { links_to_drink_ingredients => 'ingredient' },
+      join => { links_to_drink_ingredients => { ingredient => 'kind_of' } },
       group_by => 'me.id',
    })->get_column('id')->as_query;
 
@@ -44,6 +44,7 @@ sub none {
 
    my $q = $ii
       ->related_resultset('ingredient')
+      ->related_resultset('kind_of')
       ->related_resultset('links_to_drink_ingredients')
       ->related_resultset('drink')
       ->search({
