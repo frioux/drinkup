@@ -56,4 +56,20 @@ sub create_drink {
    })
 }
 
+use DBIx::Class::UnicornLogger;
+my $pp = DBIx::Class::UnicornLogger->new({
+   tree => { profile => 'console' },
+   profile => 'console'
+});
+
+sub connection {
+   my $self = shift;
+
+   my $ret = $self->next::method(@_);
+
+   $self->storage->debugobj($pp);
+
+   $ret
+}
+
 1;
