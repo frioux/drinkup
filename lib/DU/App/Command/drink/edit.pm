@@ -4,7 +4,7 @@ use 5.14.1;
 use warnings;
 
 use DU::App -command;
-use DU::Util 'drink_as_markdown';
+use DU::Util 'drink_as_markdown', 'drink_as_data';
 
 sub abstract { 'edit drink' }
 
@@ -14,28 +14,7 @@ sub execute {
    my ($self, $opt, $args) = @_;
 
    DU::Util::single_item(sub {
-      my $data = DU::Util::edit_data({
-         name => $_[0]->name,
-         description => $_[0]->description,
-         source => $_[0]->source,
-         ingredients => [
-            map +{
-               ( $_->arbitrary_amount
-                  ? ( arbitrary_amount => $_->arbitrary_amount )
-                  : ()
-               ),
-               ( $_->unit
-                  ? (
-                     unit => $_->unit->name,
-                     amount => $_->amount,
-                  )
-                  : ()
-               ),
-               ( $_->notes  ? ( notes  => $_->notes  ) : () ),
-               name => $_->ingredient->name,
-            }, $_[0]->links_to_drink_ingredients->all
-         ],
-      });
+      my $data = DU::Util::edit_data(drink_as_data($_[0]));
 
       $_[0]->update({
          description => $data->{description},
