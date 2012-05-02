@@ -1,6 +1,7 @@
 package DU::Schema;
 
 use parent 'DBIx::Class::Schema';
+use Scalar::Util 'blessed';
 
 use Carp 'croak';
 
@@ -16,6 +17,19 @@ sub create_drink {
    croak 'ingredients arrayref is required!'
       unless $args->{ingredients} and
          ref $args->{ingredients} eq 'ARRAY';
+
+   my @variant;
+
+   if (my $vn = $args->{variant_of_drink}) {
+      my $v;
+      if (blessed $vn) {
+         $v = $vn;
+      } else {
+         $v = $self->resultset('Drink')->find_by_name($vn)
+            or die "no such drink $vn";
+      }
+      @variant = ( variant_of_drink_id => $v->id )
+   }
 
    my @links = map {
       my @unit;
@@ -44,10 +58,7 @@ sub create_drink {
    $self->resultset('Drink')->create({
       description => $args->{description},
       source => $args->{source},
-      ( $args->{variant_of_drink}
-         ? ( variant_of_drink  => $args->{variant_of_drink}  )
-         : ()
-      ),
+      @variant,
       names => [{
          name => $args->{name},
          order => 1,

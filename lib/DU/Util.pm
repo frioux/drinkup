@@ -53,6 +53,9 @@ sub drink_as_data {
       name => $_[0]->name,
       description => $_[0]->description,
       source => $_[0]->source,
+      ( $_[0]->variant_of_drink ? (
+         variant_of_drink => $_[0]->variant_of_drink->name,
+      ) : () ),
       ingredients => [
          map +{
             ( $_->arbitrary_amount

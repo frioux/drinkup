@@ -83,6 +83,29 @@ subtest 'drink' => sub {
       ]);
    };
 
+   subtest 'new --based_on' => sub {
+      local $ENV{EDITOR} = 'drink-new-based-on';
+      my $result = test_app($app => [qw(drink new --based_on), 'Awesome bevvy']);
+      stdout_is($result, [
+         '## silly new name',
+         '',
+         '## Ingredients',
+         '',
+         ' * 4 ounces of ice',
+         '',
+         '## Description',
+         '',
+         "YUMM",
+         '',
+         q(Variant of Awesome bevvy),
+         '',
+         q(Source: Boy's Life),
+         '',
+         '',
+         'drink (silly new name) created',
+      ]);
+   };
+
    subtest 'rm' => sub {
       my $result = test_app($app => [qw(drink rm), 'tom*']);
       stdout_is($result, ["drink (Tom Collins) deleted"], 'simple deletion works');

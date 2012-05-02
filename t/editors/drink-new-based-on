@@ -1,0 +1,10 @@
+#!/usr/bin/env perl
+
+use 5.14.1;
+use YAML qw(LoadFile DumpFile);
+use warnings;
+
+my $file = shift;
+my $data = LoadFile($file);
+$data->{name} = 'silly new name';
+DumpFile($file, $data);

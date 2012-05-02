@@ -16,10 +16,18 @@ sub execute {
    DU::Util::single_item(sub {
       my $data = DU::Util::edit_data(drink_as_data($_[0]));
 
-      $_[0]->update({
+      my $basic = {
          description => $data->{description},
          source      => $data->{source},
-      });
+         variant_of_drink_id => undef,
+      };
+      if (my $v = $data->{variant_of_drink}) {
+         DU::Util::single_item(sub {
+            $basic->{variant_of_drink_id} = $_[0]->id
+         }, 'drink variant', $v, $self->app->app->schema->resultset('Drink'));
+      }
+
+      $_[0]->update($basic);
 
       $_[0]->names->delete;
       $_[0]->add_to_names({ name => $data->{name}, order => 1 });

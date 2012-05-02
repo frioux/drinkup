@@ -10,6 +10,7 @@ my $yml = <<'YML';
 description: A Delicious beverage of frew's own design
 name: Frewba Libre
 source: TV Guide wtf?
+variant_of_drink: Cuba Libre
 YML
 print $fh $yml;
 close $fh;

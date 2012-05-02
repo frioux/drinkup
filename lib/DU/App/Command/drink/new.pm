@@ -4,17 +4,27 @@ use 5.14.1;
 use warnings;
 
 use DU::App -command;
-use DU::Util qw(edit_data drink_as_markdown);
+use DU::Util qw(edit_data drink_as_data single_item drink_as_markdown);
 
 sub abstract { 'create new drink' }
 
 sub usage_desc { 'du drink new $drink' }
 
+sub opt_spec {
+   [ 'based_on|b=s',  'the drink to base the new drink on' ],
+}
+
 sub execute {
    my ($self, $opt, $args) = @_;
 
-   my $i = $self->app->app->schema->create_drink(
-      edit_data({
+   my $create;
+   if (my $b = $opt->based_on) {
+      single_item(sub {
+         $create = drink_as_data($_[0]);
+         $create->{variant_of_drink} = $_[0]->name;
+      }, 'drink', $b, $self->app->app->schema->resultset('Drink'))
+   } else {
+      $create = {
          description => 'Refreshing beverage for a hot day',
          name => 'Tom Collins',
          source => '500 Cocktails, p27',
@@ -31,7 +41,11 @@ sub execute {
             name => 'Simple Syrup',
             volume => 1 / 24,
          }],
-      })
+      }
+   }
+
+   my $i = $self->app->app->schema->create_drink(
+      edit_data($create)
    );
 
    $i->discard_changes;

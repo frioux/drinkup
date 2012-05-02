@@ -5,6 +5,15 @@ use warnings;
 
 use parent 'DU::Schema::ResultSet';
 
+sub find_by_name {
+   $_[0]->search({
+      'names.name' => $_[1],
+   }, {
+      join => 'names',
+      rows => 1,
+   })->next
+}
+
 sub cli_find {
    $_[0]->search({
       'names.name' => $_[0]->_glob_to_like($_[1]),
