@@ -45,8 +45,8 @@ sub execute {
          }
          $_[0]->links_to_drink_ingredients->create(
             +{
-               ( $_->{arbitrary_volume}
-                  ? ( arbitrary_volume => $_->{arbitrary_volume} )
+               ( $_->{arbitrary_amount}
+                  ? ( arbitrary_amount => $_->{arbitrary_amount} )
                   : ()
                ),
                ( $_->{unit}

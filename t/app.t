@@ -41,6 +41,7 @@ subtest 'drink' => sub {
          '',
          q(Source: Boy's Life),
          '',
+         '',
          'drink (Awesome bevvy) created',
       ]);
    };
