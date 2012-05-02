@@ -4,7 +4,6 @@ use 5.14.1;
 use warnings;
 
 use DU::App -command;
-use DU::Util 'drink_as_markdown';
 
 sub abstract { 'list drinks' }
 
@@ -31,7 +30,7 @@ sub execute {
    $rs = $rs->every($user) if $opt->all_ingredients;
    $rs = $rs->nearly($user, $opt->nearly_all_ingredients ) if $opt->nearly_all_ingredients;
 
-   print drink_as_markdown($_) for $rs->all
+   say '* ' . $_->name for $rs->all
 }
 
 1;
