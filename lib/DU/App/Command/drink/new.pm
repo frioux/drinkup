@@ -30,16 +30,20 @@ sub execute {
          source => '500 Cocktails, p27',
          ingredients => [{
             name => 'Club Soda',
-            volume => 1,
+            unit => 'ounce',
+            amount => 4,
          }, {
             name => 'Gin',
-            volume => .5,
+            unit => 'ounce',
+            amount => 2,
          }, {
             name => 'Lemon Juice',
-            volume => .25,
+            unit => 'ounce',
+            amount => 1,
          }, {
             name => 'Simple Syrup',
-            volume => 1 / 24,
+            unit => 'tablespoon',
+            amount => 1,
          }],
       }
    }
