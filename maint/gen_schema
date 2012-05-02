@@ -6,6 +6,8 @@ use lib qw(lib t/lib);
 
 use DU::Schema;
 use SQL::Translator;
+use SQL::Translator::Producer::SQLite;
+$SQL::Translator::Producer::SQLite::NO_QUOTES = 0;
 
 my $schema = DU::Schema->connect({ dsn => 'dbi:SQLite::memory:' });
 print scalar ($schema->storage->deployment_statements(
