@@ -10,6 +10,10 @@ sub abstract { '' }
 
 sub usage_desc { '' }
 
+sub opt_spec {
+   [ 'seeding!',  'use this to disable seeding', { default => 1 } ],
+}
+
 sub execute {
    my ($self, $opt, $args) = @_;
 
@@ -18,7 +22,7 @@ sub execute {
    my $s = $self->app->app->schema;
 
    A->_deploy_schema($s);
-   A->_populate_schema($s);
+   A->_populate_schema($s) if $opt->seeding;
 
    say 'done';
 }
