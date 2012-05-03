@@ -160,6 +160,30 @@ subtest 'inventory' => sub {
    };
 };
 
+subtest 'maint' => sub {
+   my $app1 = DU::App->new({
+      connect_info => {
+         dsn => 'dbi:SQLite::memory:',
+         on_connect_do => 'PRAGMA foreign_keys = ON',
+      },
+   });
+   my $app2 = DU::App->new({
+      connect_info => {
+         dsn => 'dbi:SQLite::memory:',
+         on_connect_do => 'PRAGMA foreign_keys = ON',
+      },
+   });
+   subtest 'install' => sub {
+      my $result = test_app($app1 => [qw(maint install),]);
+      stdout_is($result, [ 'done' ]);
+      is($app1->schema->resultset('Drink')->count, 3, 'drinks correctly seeded');
+   };
+   subtest 'install --no-seeding' => sub {
+      my $result = test_app($app2 => [qw(maint install --no-seeding),]);
+      stdout_is($result, [ 'done' ]);
+      is($app2->schema->resultset('Drink')->count, 0, 'drinks correctly unseeded');
+   };
+};
 done_testing;
 
 sub stdout_is {
