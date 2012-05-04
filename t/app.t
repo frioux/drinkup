@@ -173,17 +173,41 @@ subtest 'maint' => sub {
          on_connect_do => 'PRAGMA foreign_keys = ON',
       },
    });
+
    subtest 'install' => sub {
       my $result = test_app($app1 => [qw(maint install),]);
       stdout_is($result, [ 'done' ]);
       is($app1->schema->resultset('Drink')->count, 3, 'drinks correctly seeded');
    };
+
    subtest 'install --no-seeding' => sub {
       my $result = test_app($app2 => [qw(maint install --no-seeding),]);
       stdout_is($result, [ 'done' ]);
       is($app2->schema->resultset('Drink')->count, 0, 'drinks correctly unseeded');
+
+      $app2->schema->resultset('Unit')->populate([
+         [qw(name gills)],
+         [ounce      => 1 / 4         ] ,
+         [tablespoon => 1 / 4 / 2     ] ,
+         [teaspoon   => 1 / 4 / 2 / 3 ] ,
+         [dash       => undef         ] ,
+      ]);
+
+   };
+
+   subtest 'export' => sub {
+      ok(!-f 'test-export.tar.xz', 'no export yet');
+      my $result = test_app($app1 => [qw(maint export test-export),]);
+      stdout_is($result, [ 'done' ]);
+      ok(-f 'test-export.tar.xz', 'export created');
+   };
+   subtest 'import' => sub {
+      my $result = test_app($app2 => [qw(maint import test-export),]);
+      stdout_is($result, [ 'done' ]);
+      unlink 'test-export.tar.xz';
    };
 };
+
 done_testing;
 
 sub stdout_is {
