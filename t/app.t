@@ -15,6 +15,25 @@ my $app = A->app;
 
 local $ENV{PATH} = 't/editors:' . $ENV{PATH};
 
+subtest help => sub {
+   local $TODO = q(App::Cmd can't test help for subcommands?);
+   my $result = test_app($app => [qw(drink help)]);
+   stdout_is($result, [
+'app.t <command>',
+'',
+'Available commands:',
+'',
+q(  commands: list the application's commands),
+q(      help: display a command's help screen),
+'',
+'     drink: interact with drinks',
+'ingredient: interact with ingredients',
+' inventory: interact with inventory',
+'     maint: ',
+'',
+   ]);
+};
+
 subtest 'drink' => sub {
    subtest 'ls' => sub {
       my $result = test_app($app => [qw(drink ls)]);
@@ -219,5 +238,5 @@ sub stdout_is {
       stdout => \@out,
       stderr => [split /\n/, $result->stderr],
       error  => $result->error,
-   })), die 'so long cruel world';
+   }))
 }
