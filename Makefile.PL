@@ -8,10 +8,12 @@ requires 'DBIx::Class::TimeStamp';
 requires 'DBIx::Class::Candy';
 requires 'DBIx::Class::Helpers';
 requires 'DBIx::Class::UnicornLogger';
+requires 'Config::ZOMG';
 requires 'IO::Compress::Xz';
 requires 'App::Cmd';
 requires 'YAML::Syck';
 requires 'Test::More';
+requires 'Module::Load';
 
 name        'Drinkup';
 author      'Arthur Axel fREW Schmidt <frioux@gmail.com>';
