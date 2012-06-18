@@ -5,7 +5,7 @@ use warnings;
 
 use Sub::Exporter -setup => {
    exports => [qw{
-      volume_with_unit drink_as_markdown drink_as_data single_item edit_data
+      ingredient_as_data volume_with_unit drink_as_markdown drink_as_data single_item edit_data
    }],
 };
 use Lingua::EN::Inflect 'PL';
@@ -73,6 +73,16 @@ sub drink_as_data {
             name => $_->ingredient->name,
          }, $_[0]->links_to_drink_ingredients->all
       ],
+   }
+}
+
+sub ingredient_as_data {
+   return + {
+      name => $_[0]->name,
+      description => $_[0]->description,
+      ( $_[0]->direct_kind_of ? (
+         isa => $_[0]->direct_kind_of->name,
+      ) : () ),
    }
 }
 

@@ -4,7 +4,7 @@ use 5.14.1;
 use warnings;
 
 use DU::App -command;
-use DU::Util qw(single_item edit_data);
+use DU::Util qw(single_item edit_data ingredient_as_data);
 
 sub abstract { 'edit ingredient' }
 
@@ -14,11 +14,7 @@ sub execute {
    my ($self, $opt, $args) = @_;
 
    single_item(sub {
-      my $edit = edit_data({
-         name => $_[0]->name,
-         description => $_[0]->description,
-         ($_[0]->kind_of_id ? ( isa => $_[0]->direct_kind_of->name ) : ()),
-      });
+      my $edit = edit_data(ingredient_as_data($_[0]));
       if (my $p_name = delete $edit->{isa}) {
          my $p = $self->app->app->schema->resultset('Ingredient')->find_or_create({
             name => $p_name
