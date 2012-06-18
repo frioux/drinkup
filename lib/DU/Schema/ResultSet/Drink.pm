@@ -89,6 +89,17 @@ sub ineq_by_user {
    $self->ineq($ingredient_rs, $min, $max);
 }
 
+sub ineq_by_ingredient_id {
+   my ($self, $user, $min, $max) = @_;
+
+   my $ingredient_rs = $_[0]->result_source->schema->resultset('Ingredient')
+      ->search({
+         'me.id' => $_[1]
+      });
+
+   $self->ineq($ingredient_rs, $min, $max);
+}
+
 sub ineq {
    my ($self, $ingredient_rs, $min, $max) = @_;
 
