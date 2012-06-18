@@ -81,14 +81,20 @@ sub none {
    $self->search({ id => { -in => $ids } })
 }
 
-sub ineq {
+sub ineq_by_user {
    my ($self, $user, $min, $max) = @_;
 
-   my $ingredients_on_hand = $self->result_source->schema->resultset('InventoryItem')
-      ->search({
-         'me.user_id' => $user->id
-      }, {
-         join => { ingredient => { kind_of => 'links_to_drink_ingredients' } },
+   my $ingredient_rs = $user->ingredients;
+
+   $self->ineq($ingredient_rs, $min, $max);
+}
+
+sub ineq {
+   my ($self, $ingredient_rs, $min, $max) = @_;
+
+   my $ingredients_on_hand = $ingredient_rs
+      ->search(undef, {
+         join => { kind_of => 'links_to_drink_ingredients' },
          columns => {
             drink_id => 'links_to_drink_ingredients.drink_id',
             ingredient_count => { count => '*', -as => 'ingredient_count' },
@@ -124,7 +130,11 @@ SQL
    $self->search({ 'me.id' => { -in => $creation } });
 }
 
+sub nearly_by_user { $_[0]->ineq_by_user($_[1], $_[2], $_[2]); }
+
 sub nearly { $_[0]->ineq($_[1], $_[2], $_[2]); }
+
+sub every_by_user { $_[0]->nearly_by_user($_[1], 0) }
 
 sub every { $_[0]->nearly($_[1], 0) }
 

@@ -132,14 +132,14 @@ subtest searches => sub {
    my $sl = $lemon_juice->direct_kinds->create({ name => 'Sunkist Lemon Juice' });
 
    cmp_deeply(
-      [ sort map $_->name, $d->every($f)->all ],
+      [ sort map $_->name, $d->every_by_user($f)->all ],
       [ ],
       'every'
    );
    $f->add_to_ingredients($sl);
 
    cmp_deeply(
-      [ sort map $_->name, $d->every($f)->all ],
+      [ sort map $_->name, $d->every_by_user($f)->all ],
       [ 'Tom Collins', ],
       'every (post kind_of addition)'
    );
