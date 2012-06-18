@@ -115,7 +115,7 @@ subtest searches => sub {
    );
 
    cmp_deeply(
-      [ sort map $_->name, $d->some($f)->all ],
+      [ sort map $_->name, $d->some_by_user_inventory($f)->all ],
       [ 'Frewba Libre', 'Tom Collins' ],
       'some'
    );

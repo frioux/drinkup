@@ -22,12 +22,16 @@ sub cli_find {
    })
 }
 
+sub some_by_user_inventory {
+   $_[0]->some($_[1]->inventory_items->get_column('ingredient_id')->as_query)
+}
+
 sub some {
-   my ($self, $user) = @_;
+   my ($self, $ingredient_ids) = @_;
 
    my $ids = $self->search({
       'kind_of.id' => {
-         -in => $user->inventory_items->get_column('ingredient_id')->as_query
+         -in => $ingredient_ids,
       },
    }, {
       join => { links_to_drink_ingredients => { ingredient => 'kind_of' } },
