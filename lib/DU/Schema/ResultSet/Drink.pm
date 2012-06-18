@@ -41,34 +41,41 @@ sub some {
    $self->search({ id => { -in => $ids } })
 }
 
-sub none {
-   my ($self, $user) = @_;
-
-   #my $ii = $user->inventory_items;
-
-   my $ii = $self->result_source->schema->resultset('InventoryItem')
+sub none_by_user_inventory {
+   my $i = $_[0]->result_source->schema->resultset('InventoryItem')
       ->search({
-         'ii.user_id' => $user->id
-      }, {
-         alias => 'ii',
+         'me.user_id' => $_[1]->id
+      })->related_resultset('ingredient');
+
+   $_[0]->none($i)
+}
+
+sub none_by_ingredient_id {
+   my $i = $_[0]->result_source->schema->resultset('Ingredient')
+      ->search({
+         'me.id' => $_[1]
       });
 
-   my $q = $ii
-      ->related_resultset('ingredient')
+   $_[0]->none($i)
+}
+
+sub none {
+   my ($self, $ingredient_rs) = @_;
+
+   my $q = $ingredient_rs
       ->related_resultset('kind_of')
       ->related_resultset('links_to_drink_ingredients')
       ->related_resultset('drink')
       ->search({
-         'drink.id' => { -ident => 'me.id' },
-      }, {
-         #alias => 'ud',
+         'drink.id' => { -ident => 'none_search.id' },
       })
       ->as_query;
 
    my $ids = $self->search({
       -not_exists => $q,
    }, {
-      group_by => 'me.id',
+      alias    => 'none_search',
+      group_by => 'none_search.id',
    })->get_column('id')->as_query;
 
    $self->search({ id => { -in => $ids } })

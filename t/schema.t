@@ -109,7 +109,7 @@ subtest searches => sub {
       })->all;
 
    cmp_deeply(
-      [ sort map $_->name, $d->none($f)->all ],
+      [ sort map $_->name, $d->none_by_user_inventory($f)->all ],
       [ 'Cuba Libre' ],
       'none'
    );
