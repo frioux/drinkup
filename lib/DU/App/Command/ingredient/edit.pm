@@ -4,7 +4,7 @@ use 5.14.1;
 use warnings;
 
 use DU::App -command;
-use DU::Util;
+use DU::Util qw(single_item edit_data);
 
 sub abstract { 'edit ingredient' }
 
@@ -13,8 +13,8 @@ sub usage_desc { 'du ingredient edit $ingredient' }
 sub execute {
    my ($self, $opt, $args) = @_;
 
-   DU::Util::single_item(sub {
-      my $edit = DU::Util::edit_data({
+   single_item(sub {
+      my $edit = edit_data({
          name => $_[0]->name,
          description => $_[0]->description,
          ($_[0]->kind_of_id ? ( isa => $_[0]->direct_kind_of->name ) : ()),
