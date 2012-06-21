@@ -5,6 +5,65 @@ use warnings;
 
 use parent 'DU::Schema::ResultSet';
 
+use Carp 'croak';
+use Scalar::Util 'blessed';
+
+sub create {
+   my ($self, $args) = @_;
+
+   croak 'ingredients arrayref is required!'
+      unless $args->{ingredients} and
+         ref $args->{ingredients} eq 'ARRAY';
+
+   my @variant;
+
+   if (my $vn = $args->{variant_of_drink}) {
+      my $v;
+      if (blessed $vn) {
+         $v = $vn;
+      } else {
+         $v = $self->find_by_name($vn)
+            or die "no such drink $vn";
+      }
+      @variant = ( variant_of_drink_id => $v->id )
+   }
+
+   my @links = map {
+      my @unit;
+      if ($_->{unit}) {
+         my $unit_id = $self->result_source->schema->resultset('Unit')
+            ->search({ name => $_->{unit} })
+            ->get_column('id')
+            ->single
+            or die "unknown unit $_->{unit} used";
+         @unit = ( unit_id => $unit_id )
+      }
+
+      +{
+         ( $_->{arbitrary_amount}
+            ? ( arbitrary_amount => $_->{arbitrary_amount} )
+            : ()
+         ),
+         @unit,
+
+         ( $_->{notes}  ? ( notes  => $_->{notes}  ) : () ),
+         ( $_->{amount}  ? ( amount  => $_->{amount}  ) : () ),
+         ( $_->{amount}  ? ( amount  => $_->{amount}  ) : () ),
+         ingredient => { name => $_->{name} },
+      }
+   }  @{$args->{ingredients}};
+   $self->next::method({
+      description => $args->{description},
+      source => $args->{source},
+      @variant,
+      names => [{
+         name => $args->{name},
+         order => 1,
+      }],
+      links_to_drink_ingredients => \@links,
+   })
+}
+
 sub find_by_name {
    $_[0]->search({
       'names.name' => $_[1],
