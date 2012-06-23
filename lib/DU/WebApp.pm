@@ -24,16 +24,27 @@ sub wm {
    )->to_app;
 }
 
+sub restish {
+   my ($set, $item, $list) = @_;
+   sub (/data/*) {
+      wm("DU::WebApp::Resource::$item", {
+        item     => $set->find($_[1]),
+        writable => 1,
+      })
+   },
+   sub (/) {
+      wm("DU::WebApp::Resource::$list", {
+        set      => $set,
+        writable => 1,
+      })
+   },
+}
+
 sub dispatch_request {
   sub (/drinks) { [ 301, [ 'Location', '/drinks/' ], [ 'nt bro' ] ] },
   sub (/drinks/...) {
     my $set = $schema->resultset('Drink');
-    sub (/data/*) {
-       wm('DU::WebApp::Resource::Drink', {
-         item     => $set->find($_[1]),
-         writable => 1,
-       })
-    },
+    restish($set, qw(Drink Drinks)),
     sub (/find_by_name + ?name=) {
        wm('DU::WebApp::Resource::Drink', { item => $set->find_by_name($_[1]) })
     },
@@ -51,28 +62,17 @@ sub dispatch_request {
     sub (/without_ingredients + ?@ingredient_id=) {
        wm('DU::WebApp::Resource::Drinks', { set => $set->none_by_ingredient_id($_[1]) })
     },
-    sub (/) {
-       wm('DU::WebApp::Resource::Drinks', {
-         set      => $set,
-         writable => 1,
-       })
-    },
   },
 
   sub (/ingredients) { [ 301, [ 'Location', '/ingredients/' ], [ 'nt bro' ] ] },
   sub (/ingredients/...) {
     my $set = $schema->resultset('Ingredient');
-    sub (/data/*) {
-       wm('DU::WebApp::Resource::Ingredient', { item => $set->find($_[1]) })
-    },
+    restish($set, qw(Ingredient Ingredients)),
     sub (/find_by_name + ?name=) {
        wm('DU::WebApp::Resource::Ingredient', { item => $set->find_by_name($_[1]) })
     },
     sub (/search_by_name + ?name=) {
        wm('DU::WebApp::Resource::Ingredients', { set => $set->cli_find($_[1]) })
-    },
-    sub (/) {
-       wm('DU::WebApp::Resource::Ingredients', { set => $set })
     },
   },
 
