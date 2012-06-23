@@ -6,6 +6,7 @@ use warnings;
 use Test::More;
 use App::Cmd::Tester;
 use Data::Dumper::Concise;
+use File::Temp 'tempfile';
 
 use lib 't/lib';
 
@@ -214,16 +215,17 @@ subtest 'maint' => sub {
 
    };
 
+   my (undef, $filename) = tempfile(OPEN => 0);
    subtest 'export' => sub {
       ok(!-f 'test-export.tar.xz', 'no export yet');
-      my $result = test_app($app1 => [qw(maint export test-export),]);
+      my $result = test_app($app1 => [qw(maint export), $filename]);
       stdout_is($result, [ 'done' ]);
-      ok(-f 'test-export.tar.xz', 'export created');
+      ok(-f "$filename.tar.xz", 'export created');
    };
    subtest 'import' => sub {
-      my $result = test_app($app2 => [qw(maint import test-export),]);
+      my $result = test_app($app2 => [qw(maint import), $filename]);
       stdout_is($result, [ 'done' ]);
-      unlink 'test-export.tar.xz';
+      unlink "$filename.tar.xz";
    };
 };
 

@@ -17,6 +17,7 @@ sub execute {
 
    require Archive::Tar;
    require JSON;
+   require File::Temp;
    use IO::Compress::Xz 'xz';
 
    my $tar = Archive::Tar->new;
@@ -29,10 +30,11 @@ sub execute {
    );
 
    my $name = $args->[0] || 'export';
-   $tar->write(".$name.tar");
+   my (undef, $tmptar) = File::Temp::tempfile( OPEN => 0 );
+   $tar->write($tmptar);
 
-   xz ".$name.tar", "$name.tar.xz";
-   unlink ".$name.tar";
+   xz $tmptar, "$name.tar.xz";
+   unlink $tmptar;
 
    say 'done';
 }

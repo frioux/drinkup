@@ -17,19 +17,22 @@ sub execute {
 
    require Archive::Tar;
    require JSON;
+   require File::Temp;
    use IO::Uncompress::UnXz 'unxz';
 
    my $name = $args->[0] || 'export';
-   unxz "$name.tar.xz", ".$name.tar";
+   my (undef, $tmptar) = File::Temp::tempfile( OPEN => 0 );
+   unxz "$name.tar.xz", $tmptar;
 
    my $tar = Archive::Tar->new;
 
-   $tar->read(".$name.tar", { extract => 1 });
+   $tar->read($tmptar, { extract => 1 });
 
    my $version = $tar->get_content('export_version.txt');
 
    my $drink_rs = $s->resultset('Drink');
    my @drinks = @{JSON::decode_json($tar->get_content('drinks.json'))};
+   unlink $tmptar;
 
    for my $drink_data (@drinks) {
       if ($drink_rs->find_by_name($drink_data->{name})) {
