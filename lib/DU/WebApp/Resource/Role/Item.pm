@@ -5,7 +5,6 @@ use Moo::Role;
 requires 'render_item';
 requires 'encode_json';
 requires 'decode_json';
-requires 'update_resource';
 
 has item => (
    is => 'ro',
@@ -19,9 +18,9 @@ has writable => (
 sub content_types_provided { [ {'application/json' => 'to_json'} ] }
 sub content_types_accepted { [ {'application/json' => 'from_json'} ] }
 
-sub as_json { $_[0]->encode_json($_[0]->render_item(($_[0]->item))) }
+sub to_json { $_[0]->encode_json($_[0]->render_item(($_[0]->item))) }
 
-sub accept_json {
+sub from_json {
    $_[0]->update_resource(
       $_[0]->decode_json(
          $_[0]->request->content
