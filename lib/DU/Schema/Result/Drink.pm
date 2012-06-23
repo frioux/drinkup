@@ -33,5 +33,55 @@ sub name {
    })->get_column('name')->next
 }
 
+sub update {
+   my ($self, $data) = @_;
+
+   exists $data->{$_} && $self->$_($data->{$_})
+      for qw(description source);
+
+   if (my $v = $data->{variant_of_drink}) {
+      my $based_on = $self->result_source->schema->resultset('Drink')
+         ->find_by_name($v)
+            or die 'no such variant';
+
+      $self->variant_of_drink_id($based_on->id);
+   }
+
+   $self->next::method;
+
+   $self->names->delete;
+   $self->add_to_names({ name => $data->{name}, order => 1 });
+
+   $self->links_to_drink_ingredients->delete;
+   for (@{$data->{ingredients}}) {
+      my @unit;
+      if ($_->{unit}) {
+         my $unit_id = $self->app->app->schema->resultset('Unit')
+            ->search({ name => $_->{unit} })
+            ->get_column('id')
+            ->single
+            or die "unknown unit $_->{unit} used";
+         @unit = ( unit_id => $unit_id )
+      }
+      $self->links_to_drink_ingredients->create(
+         +{
+            ( $_->{arbitrary_amount}
+               ? ( arbitrary_amount => $_->{arbitrary_amount} )
+               : ()
+            ),
+            ( $_->{unit}
+               ? (
+                  @unit,
+                  amount => $_->{amount},
+               )
+               : ()
+            ),
+            ( $_->{notes}  ? ( notes  => $_->{notes}  ) : () ),
+            ingredient => { name => $_->{name} },
+         }
+      );
+   }
+}
+
 1;
 
