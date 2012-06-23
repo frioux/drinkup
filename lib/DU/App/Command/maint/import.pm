@@ -31,8 +31,19 @@ sub execute {
    my $version = $tar->get_content('export_version.txt');
 
    my $drink_rs = $s->resultset('Drink');
+   my $ingredient_rs = $s->resultset('Ingredient');
    my @drinks = @{JSON::decode_json($tar->get_content('drinks.json'))};
+   my @ingredients = @{JSON::decode_json($tar->get_content('ingredients.json'))};
+
    unlink $tmptar;
+
+   for my $ingredient_data (@ingredients) {
+      if ($ingredient_rs->find_by_name($ingredient_data->{name})) {
+         die "$ingredient_data->{name} is already in your database"
+      } else {
+         $ingredient_rs->create($ingredient_data)
+      }
+   }
 
    for my $drink_data (@drinks) {
       if ($drink_rs->find_by_name($drink_data->{name})) {
