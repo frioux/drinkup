@@ -1,5 +1,28 @@
 package A;
 
+use 5.14.1;
+use warnings;
+
+use Data::Dumper::Concise;
+use Test::More;
+use Test::Deep;
+
+use Sub::Exporter::Progressive -setup => {
+  exports => [qw(app stdout_is)],
+};
+
+sub stdout_is {
+   my ( $result, $expected, $reason ) = @_;
+
+   my @out = split /\n/, $result->stdout;
+   local $Test::Builder::Level = $Test::Builder::Level + 1;
+   is_deeply(\@out, $expected, $reason || ()) or diag(Dumper({
+      stdout => \@out,
+      stderr => [split /\n/, $result->stderr],
+      error  => $result->error,
+   }))
+}
+
 sub app {
    require DU::App;
 

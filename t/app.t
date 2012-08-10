@@ -10,7 +10,7 @@ use File::Temp 'tempfile';
 
 use lib 't/lib';
 
-use A;
+use A 'stdout_is';
 
 my $app = A->app;
 
@@ -230,15 +230,3 @@ subtest 'maint' => sub {
 };
 
 done_testing;
-
-sub stdout_is {
-   my ( $result, $expected, $reason ) = @_;
-
-   my @out = split /\n/, $result->stdout;
-   local $Test::Builder::Level = $Test::Builder::Level + 1;
-   is_deeply(\@out, $expected, $reason || ()) or diag(Dumper({
-      stdout => \@out,
-      stderr => [split /\n/, $result->stderr],
-      error  => $result->error,
-   }))
-}

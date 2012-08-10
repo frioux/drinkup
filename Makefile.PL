@@ -14,6 +14,7 @@ requires 'App::Cmd';
 requires 'YAML::Syck';
 requires 'Test::More';
 requires 'Module::Load';
+requires 'Sub::Exporter::Progressive';
 
 name        'Drinkup';
 author      'Arthur Axel fREW Schmidt <frioux@gmail.com>';
