@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use 5.14.1;
+use warnings;
+
+my $file = shift;
+open my $fh, '>', $file;
+my $yml = <<'YML';
+---
+name: plastic buttons
+description: eyeball
+YML
+print $fh $yml;
+close $fh;

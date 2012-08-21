@@ -14,6 +14,24 @@ my $app = A->app;
 
 local $ENV{PATH} = 't/editors:' . $ENV{PATH};
 
+subtest 'help' => sub {
+   my $result = test_app($app => [qw(drink help)]);
+   stdout_is($result, [
+    'drink.t <command>',
+    '',
+    'Available commands:',
+    '',
+    q(  commands: list the application's commands),
+    q(      help: display a command's help screen),
+    '',
+    '      edit: edit drink',
+    '        ls: list drinks',
+    '       new: create new drink',
+    '        rm: delete drink',
+    '      show: show drink'
+   ]);
+};
+
 subtest 'ls' => sub {
    my $result = test_app($app => [qw(drink ls)]);
    stdout_is($result, [
@@ -41,6 +59,25 @@ subtest 'new' => sub {
       '',
       '',
       'drink (Awesome bevvy) created',
+   ]);
+
+   local $ENV{EDITOR} = 'drink-new-2';
+   $result = test_app($app => [qw(drink new -b), 'Awesome bevvy']);
+   stdout_is($result, [
+      '## Awesome bevvy2',
+      '',
+      '## Ingredients',
+      '',
+      ' * 5 ounces of ice',
+      '',
+      '## Description',
+      '',
+      "YUMM",
+      '',
+      q(Source: Boy's Life),
+      '',
+      '',
+      'drink (Awesome bevvy2) created',
    ]);
 };
 
@@ -91,6 +128,24 @@ subtest 'edit' => sub {
       '',
       '',
       'drink (Frewba Libre) updated',
+   ]);
+};
+
+subtest 'show' => sub {
+   my $result = test_app($app => [qw(drink show), 'frewba libre']);
+   stdout_is($result, [
+      '## Frewba Libre',
+      '',
+      '## Ingredients',
+      '',
+      '',
+      '## Description',
+      '',
+      "A Delicious beverage of frew's own design",
+      '',
+      'Variant of Cuba Libre',
+      '',
+      'Source: TV Guide wtf?',
    ]);
 };
 

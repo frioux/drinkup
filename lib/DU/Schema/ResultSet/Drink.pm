@@ -82,10 +82,12 @@ sub cli_find {
 }
 
 sub some_by_user_inventory {
-   $_[0]->some($_[1]->inventory_items->get_column('ingredient_id')->as_query)
+   $_[0]->some_by_ingredient_id(
+      $_[1]->inventory_items->get_column('ingredient_id')->as_query
+   )
 }
 
-sub some {
+sub some_by_ingredient_id {
    my ($self, $ingredient_ids) = @_;
 
    my $ids = $self->search({
@@ -202,9 +204,13 @@ SQL
 
 sub nearly_by_user { $_[0]->ineq_by_user($_[1], $_[2], $_[2]); }
 
+sub nearly_by_ingredient_id { $_[0]->ineq_by_ingredient_id($_[1], $_[2], $_[2]); }
+
 sub nearly { $_[0]->ineq($_[1], $_[2], $_[2]); }
 
 sub every_by_user { $_[0]->nearly_by_user($_[1], 0) }
+
+sub every_by_ingredient_id { $_[0]->nearly_by_ingredient_id($_[1], 0) }
 
 sub every { $_[0]->nearly($_[1], 0) }
 

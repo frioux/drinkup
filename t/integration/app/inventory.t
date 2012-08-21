@@ -14,6 +14,22 @@ my $app = A->app;
 
 local $ENV{PATH} = 't/editors:' . $ENV{PATH};
 
+subtest 'help' => sub {
+   my $result = test_app($app => [qw(inventory help)]);
+   stdout_is($result, [
+    'inventory.t <command>',
+    '',
+    'Available commands:',
+    '',
+    q(  commands: list the application's commands),
+    q(      help: display a command's help screen),
+    '',
+    '       add: add ingredient to inventory',
+    '        ls: list inventory',
+    '        rm: remove ingredient from inventory'
+   ]);
+};
+
 subtest 'add' => sub {
    my $result = test_app($app => [qw(inventory add), '* cola']);
    stdout_is($result, [ 'ingredient (Coca Cola) added to inventory' ]);

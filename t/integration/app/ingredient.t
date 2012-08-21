@@ -14,10 +14,31 @@ my $app = A->app;
 
 local $ENV{PATH} = 't/editors:' . $ENV{PATH};
 
+subtest 'help' => sub {
+   my $result = test_app($app => [qw(ingredient help)]);
+   stdout_is($result, [
+    'ingredient.t <command>',
+    '',
+    'Available commands:',
+    '',
+    q(  commands: list the application's commands),
+    q(      help: display a command's help screen),
+    '',
+    '      edit: edit ingredient',
+    '        ls: list ingredients',
+    '       new: create new ingredient',
+    '        rm: delete ingredient'
+   ]);
+};
+
 subtest 'new' => sub {
    local $ENV{EDITOR} = 'ingredient-new-1';
    my $result = test_app($app => [qw(ingredient new)]);
-   stdout_is($result, [ 'ingredient (copper coins) created' ]);
+   stdout_is($result, [ 'ingredient (copper coins) created' ], 'with isa');
+
+   local $ENV{EDITOR} = 'ingredient-new-2';
+   $result = test_app($app => [qw(ingredient new)]);
+   stdout_is($result, [ 'ingredient (metal coins) created' ], 'without isa');
 };
 
 subtest 'ls' => sub {
@@ -35,6 +56,7 @@ subtest 'ls' => sub {
       ' * Vanilla Extract',
       ' * coin',
       ' * copper coins',
+      ' * metal coins',
    ]);
 };
 
@@ -43,7 +65,13 @@ subtest 'edit' => sub {
    my $result = test_app($app => [qw(ingredient edit), 'lime *']);
    stdout_is($result, [
       'ingredient (plastic buttons) updated',
-   ]);
+   ], 'with isa');
+
+   local $ENV{EDITOR} = 'ingredient-edit-2';
+   $result = test_app($app => [qw(ingredient edit), 'plastic buttons']);
+   stdout_is($result, [
+      'ingredient (plastic buttons) updated',
+   ], 'without isa');
 };
 
 subtest 'rm' => sub {

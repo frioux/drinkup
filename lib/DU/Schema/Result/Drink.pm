@@ -20,7 +20,11 @@ column variant_of_drink_id => {
    is_nullable => 1,
 };
 
-belongs_to variant_of_drink => '::Drink', 'variant_of_drink_id';
+belongs_to variant_of_drink => '::Drink', 'variant_of_drink_id', {
+   proxy => {
+      variant_of_drink_name => 'name',
+   },
+};
 has_many variants => '::Drink', 'variant_of_drink_id';
 has_many names => '::DrinkName', 'drink_id';
 has_many links_to_drink_ingredients => '::Drink_Ingredient', 'drink_id';

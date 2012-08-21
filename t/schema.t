@@ -111,13 +111,29 @@ subtest searches => sub {
    cmp_deeply(
       [ sort map $_->name, $d->none_by_user_inventory($f)->all ],
       [ 'Cuba Libre' ],
-      'none'
+      'none_by_user_inventory'
+   );
+
+   cmp_deeply(
+      [ sort map $_->name, $d->none_by_ingredient_id([
+         map $_->id, $f->ingredients->all
+      ])->all ],
+      [ 'Cuba Libre' ],
+      'none_by_ingredient_id'
    );
 
    cmp_deeply(
       [ sort map $_->name, $d->some_by_user_inventory($f)->all ],
       [ 'Frewba Libre', 'Tom Collins' ],
-      'some'
+      'some_by_user_inventory'
+   );
+
+   cmp_deeply(
+      [ sort map $_->name, $d->some_by_ingredient_id([
+         map $_->id, $f->ingredients->all
+      ])->all ],
+      [ 'Frewba Libre', 'Tom Collins' ],
+      'some_by_ingredient_id'
    );
 
    $f->inventory_items->search({
@@ -134,14 +150,22 @@ subtest searches => sub {
    cmp_deeply(
       [ sort map $_->name, $d->every_by_user($f)->all ],
       [ ],
-      'every'
+      'every_by_user'
    );
    $f->add_to_ingredients($sl);
 
    cmp_deeply(
       [ sort map $_->name, $d->every_by_user($f)->all ],
       [ 'Tom Collins', ],
-      'every (post kind_of addition)'
+      'every_by_user (post kind_of addition)'
+   );
+
+   cmp_deeply(
+      [ sort map $_->name, $d->every_by_ingredient_id([
+         map $_->id, $f->ingredients->all
+      ])->all ],
+      [ 'Tom Collins', ],
+      'every_by_ingredient_id'
    );
 };
 

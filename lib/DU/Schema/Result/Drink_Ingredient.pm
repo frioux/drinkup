@@ -27,8 +27,17 @@ column notes => {
 };
 
 belongs_to drink      => '::Drink', 'drink_id';
-belongs_to ingredient => '::Ingredient', 'ingredient_id';
-belongs_to unit => '::Unit', 'unit_id';
+belongs_to ingredient => '::Ingredient', 'ingredient_id', {
+   proxy => {
+      ingredient_name => 'name',
+   },
+};
+
+belongs_to unit => '::Unit', 'unit_id', {
+   proxy => {
+      unit_name => 'name',
+   },
+};
 
 1;
 

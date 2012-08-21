@@ -49,7 +49,12 @@ sub materialized_path_columns {
 }
 
 
-belongs_to direct_kind_of => '::Ingredient', 'kind_of_id', { join_type => 'left' };
+belongs_to direct_kind_of => '::Ingredient', 'kind_of_id', {
+   join_type => 'left',
+   proxy => {
+      direct_kind_of_name => 'name',
+   },
+};
 has_many direct_kinds => '::Ingredient', 'kind_of_id';
 has_many inventory_items => '::InventoryItem', 'ingredient_id';
 has_many links_to_drink_ingredients => '::Drink_Ingredient', 'ingredient_id';

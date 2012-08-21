@@ -14,21 +14,17 @@ my $app = A->app;
 
 local $ENV{PATH} = 't/editors:' . $ENV{PATH};
 
-local $TODO = q(App::Cmd can't test help for subcommands?);
-my $result = test_app($app => [qw(drink help)]);
+my $result = test_app($app => [qw(help)]);
 stdout_is($result, [
-   'app.t <command>',
-   '',
    'Available commands:',
    '',
-   q(  commands: list the application's commands),
-   q(      help: display a command's help screen),
+   q(    commands: list the application's commands),
+   q(        help: display a command's help screen),
    '',
-   '     drink: interact with drinks',
-   'ingredient: interact with ingredients',
-   ' inventory: interact with inventory',
-   '     maint: ',
-   '',
+   '       drink: interact with drinks',
+   '  ingredient: interact with ingredients',
+   '   inventory: interact with inventory',
+   '       maint: ',
 ]);
 
 done_testing;

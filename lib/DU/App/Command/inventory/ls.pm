@@ -5,9 +5,9 @@ use warnings;
 
 use DU::App -command;
 
-sub abstract { 'remove ingredient from inventory' }
+sub abstract { 'list inventory' }
 
-sub usage_desc { 'du inventory rm $ingredient' }
+sub usage_desc { 'du ls' }
 
 sub execute {
    my ($self, $opt, $args) = @_;

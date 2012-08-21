@@ -3,9 +3,10 @@ package DU::Util;
 use 5.14.1;
 use warnings;
 
-use Sub::Exporter -setup => {
+use Sub::Exporter::Progressive -setup => {
    exports => [qw{
-      ingredient_as_data volume_with_unit drink_as_markdown drink_as_data single_item edit_data
+      ingredient_as_data volume_with_unit drink_as_markdown drink_as_data
+      single_item edit_data
    }],
 };
 use Lingua::EN::Inflect 'PL';
@@ -17,7 +18,7 @@ sub volume_with_unit {
 
    return $v if $v;
 
-   return $d_i->amount . ' ' . PL($d_i->unit->name, $d_i->amount) if $d_i->unit;
+   return $d_i->amount . ' ' . PL($d_i->unit_name, $d_i->amount) if $d_i->unit;
 
    return '???'
 }
@@ -29,7 +30,7 @@ sub drink_as_markdown {
       '',
       '## Ingredients',
       '',
-      (map ' * ' . volume_with_unit($_) . ' of ' . $_->ingredient->name,
+      (map ' * ' . volume_with_unit($_) . ' of ' . $_->ingredient_name,
          $drink->links_to_drink_ingredients->all
       ),
       '',
@@ -37,7 +38,7 @@ sub drink_as_markdown {
       '',
       $drink->description,
       ( $drink->variant_of_drink ? (
-         '', 'Variant of ' . $drink->variant_of_drink->name,
+         '', 'Variant of ' . $drink->variant_of_drink_name,
       ) : () ),
       ( $drink->variants->count ? (
          '', 'Variants: ' . join ', ', map $_->name, $drink->variants->all,
@@ -54,7 +55,7 @@ sub drink_as_data {
       description => $_[0]->description,
       source => $_[0]->source,
       ( $_[0]->variant_of_drink ? (
-         variant_of_drink => $_[0]->variant_of_drink->name,
+         variant_of_drink => $_[0]->variant_of_drink_name,
       ) : () ),
       ingredients => [
          map +{
@@ -64,13 +65,13 @@ sub drink_as_data {
             ),
             ( $_->unit
                ? (
-                  unit => $_->unit->name,
+                  unit => $_->unit_name,
                   amount => $_->amount,
                )
                : ()
             ),
             ( $_->notes  ? ( notes  => $_->notes  ) : () ),
-            name => $_->ingredient->name,
+            name => $_->ingredient_name,
          }, $_[0]->links_to_drink_ingredients->all
       ],
    }
@@ -81,7 +82,7 @@ sub ingredient_as_data {
       name => $_[0]->name,
       description => $_[0]->description,
       ( $_[0]->direct_kind_of ? (
-         isa => $_[0]->direct_kind_of->name,
+         isa => $_[0]->direct_kind_of_name,
       ) : () ),
    }
 }

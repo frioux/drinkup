@@ -44,10 +44,8 @@ sub _deploy_schema {
   my $filename = Path::Class::File->new(__FILE__)->dir
     ->file('sqlite.sql')->stringify;
   my $sql = do { local (@ARGV, $/) = $filename ; <> };
-  for my $chunk ( split (/;\s*\n+/, $sql) ) {
-    if ( $chunk =~ / ^ (?! --\s* ) \S /xm ) {  # there is some real sql in the chunk - a non-space at the start of the string which is not a comment
-      $schema->storage->dbh_do(sub { $_[1]->do($chunk) }) or print "Error on SQL: $chunk\n";
-    }
+  for my $chunk ( grep { / ^ (?! --\s* ) \S /xm } split (/;\s*\n+/, $sql) ) {
+     $schema->storage->dbh_do(sub { $_[1]->do($chunk) })
   }
 }
 
