@@ -1,9 +1,9 @@
 package DU::App::Command::inventory::add;
 
-use 5.14.1;
-use warnings;
+use 5.16.1;
+use Moo;
 
-use DU::App -command;
+extends 'DU::App::Command';
 use DU::Util 'single_item';
 
 sub abstract { 'add ingredient to inventory' }
@@ -13,8 +13,8 @@ sub usage_desc { 'du inventory add $ingredient' }
 sub execute {
    my ($self, $opt, $args) = @_;
 
-   my $ii = $self->app->app->schema
-     ->resultset('User')
+   my $ii = $self
+     ->rs('User')
      ->search({ 'me.name' => 'frew' })
      ->related_resultset('inventory_items');
 
@@ -23,8 +23,8 @@ sub execute {
      ->get_column('id')
      ->as_query;
 
-   my $rs = $self->app->app->schema
-      ->resultset('Ingredient')->search({
+   my $rs = $self
+      ->rs('Ingredient')->search({
          id => { -not_in => $q }
       });
 

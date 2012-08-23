@@ -1,6 +1,6 @@
 package DU::Schema::Result;
 
-use strict;
+use 5.16.1;
 use warnings;
 
 use parent 'DBIx::Class::Core';

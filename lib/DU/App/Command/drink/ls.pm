@@ -1,9 +1,9 @@
 package DU::App::Command::drink::ls;
 
-use 5.14.1;
-use warnings;
+use 5.16.1;
+use Moo;
 
-use DU::App -command;
+extends 'DU::App::Command';
 
 sub abstract { 'list drinks' }
 
@@ -20,8 +20,8 @@ sub execute {
    my ($self, $opt, $args) = @_;
 
 
-   my $rs = $self->app->app->schema->resultset('Drink');
-   my $user = $self->app->app->schema->resultset('User')->search({
+   my $rs = $self->rs('Drink');
+   my $user = $self->rs('User')->search({
       name => 'frew',
    })->single;
 

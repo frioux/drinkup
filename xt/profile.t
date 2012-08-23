@@ -1,4 +1,4 @@
-use 5.14.1;
+use 5.16.1;
 use warnings;
 
 use Test::More;

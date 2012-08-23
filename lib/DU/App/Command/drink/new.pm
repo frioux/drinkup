@@ -1,9 +1,9 @@
 package DU::App::Command::drink::new;
 
-use 5.14.1;
-use warnings;
+use 5.16.1;
+use Moo;
 
-use DU::App -command;
+extends 'DU::App::Command';
 use DU::Util qw(edit_data drink_as_data single_item drink_as_markdown);
 
 sub abstract { 'create new drink' }
@@ -22,7 +22,7 @@ sub execute {
       single_item(sub {
          $create = drink_as_data($_[0]);
          $create->{variant_of_drink} = $_[0]->name;
-      }, 'drink', $b, $self->app->app->schema->resultset('Drink'))
+      }, 'drink', $b, $self->rs('Drink'))
    } else {
       $create = {
          description => 'Refreshing beverage for a hot day',
@@ -48,7 +48,7 @@ sub execute {
       }
    }
 
-   my $i = $self->app->app->schema->create_drink(
+   my $i = $self->schema->create_drink(
       edit_data($create)
    );
 

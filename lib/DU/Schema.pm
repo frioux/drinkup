@@ -1,5 +1,8 @@
 package DU::Schema;
 
+use 5.16.1;
+use warnings;
+
 use parent 'DBIx::Class::Schema';
 
 our $VERSION = 1;

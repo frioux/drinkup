@@ -1,9 +1,9 @@
 package DU::App::Command::ingredient::ls;
 
-use 5.14.1;
-use warnings;
+use 5.16.1;
+use Moo;
 
-use DU::App -command;
+extends 'DU::App::Command';
 
 sub abstract { 'list ingredients' }
 
@@ -13,7 +13,7 @@ sub execute {
    my ($self, $opt, $args) = @_;
 
    say '## Ingredients';
-   say ' * ' . $_->name for $self->app->app->schema->resultset('Ingredient')->all
+   say ' * ' . $_->name for $self->rs('Ingredient')->all
 }
 
 1;

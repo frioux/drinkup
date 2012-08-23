@@ -1,9 +1,9 @@
 package DU::App::Command::maint::import;
 
-use 5.14.1;
-use warnings;
+use 5.16.1;
+use Moo;
 
-use DU::App -command;
+extends 'DU::App::Command';
 use DU::Util 'drink_as_data';
 
 sub abstract { '' }
@@ -12,8 +12,6 @@ sub usage_desc { '' }
 
 sub execute {
    my ($self, $opt, $args) = @_;
-
-   my $s = $self->app->app->schema;
 
    require Archive::Tar;
    require JSON;
@@ -30,8 +28,8 @@ sub execute {
 
    my $version = $tar->get_content('export_version.txt');
 
-   my $drink_rs = $s->resultset('Drink');
-   my $ingredient_rs = $s->resultset('Ingredient');
+   my $drink_rs = $self->rs('Drink');
+   my $ingredient_rs = $self->rs('Ingredient');
    my @drinks = @{JSON::decode_json($tar->get_content('drinks.json'))};
    my @ingredients = @{JSON::decode_json($tar->get_content('ingredients.json'))};
 
@@ -49,7 +47,7 @@ sub execute {
       if ($drink_rs->find_by_name($drink_data->{name})) {
          die "$drink_data->{name} is already in your database"
       } else {
-         $s->create_drink($drink_data)
+         $self->schema->create_drink($drink_data)
       }
    }
 

@@ -1,9 +1,9 @@
 package DU::App::Command::ingredient::new;
 
-use 5.14.1;
-use warnings;
+use 5.16.1;
+use Moo;
 
-use DU::App -command;
+extends 'DU::App::Command';
 use DU::Util;
 
 sub abstract { 'create new ingredient' }
@@ -20,12 +20,12 @@ sub execute {
    });
 
    if (my $isa = delete $new->{isa}) {
-      $new->{kind_of_id} = $self->app->app->schema->resultset('Ingredient')->find_or_create({
+      $new->{kind_of_id} = $self->rs('Ingredient')->find_or_create({
          name => $isa,
       })->id
    }
 
-   my $i = $self->app->app->schema->resultset('Ingredient')->create($new);
+   my $i = $self->rs('Ingredient')->create($new);
 
    say 'ingredient (' . $i->name . ') created';
 }

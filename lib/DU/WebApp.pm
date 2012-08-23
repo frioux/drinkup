@@ -1,7 +1,10 @@
 #!/usr/bin/env perl
 
 package DU::WebApp;
+
+use 5.16.1;
 use Web::Simple;
+
 use DU::WebApp::Machine;
 use Config::ZOMG;
 use Path::Class::File;

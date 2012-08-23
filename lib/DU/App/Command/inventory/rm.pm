@@ -1,9 +1,9 @@
 package DU::App::Command::inventory::rm;
 
-use 5.14.1;
-use warnings;
+use 5.16.1;
+use Moo;
 
-use DU::App -command;
+extends 'DU::App::Command';
 use DU::Util;
 
 sub abstract { 'remove ingredient from inventory' }
@@ -13,8 +13,8 @@ sub usage_desc { 'du inventory rm $ingredient' }
 sub execute {
    my ($self, $opt, $args) = @_;
 
-   my $rs = $self->app->app->schema
-      ->resultset('User')
+   my $rs = $self
+      ->rs('User')
       ->search({ 'me.name' => 'frew' })
       ->related_resultset('inventory_items');
 

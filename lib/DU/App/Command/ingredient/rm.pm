@@ -1,9 +1,9 @@
 package DU::App::Command::ingredient::rm;
 
-use 5.14.1;
-use warnings;
+use 5.16.1;
+use Moo;
 
-use DU::App -command;
+extends 'DU::App::Command';
 use DU::Util;
 
 sub abstract { 'delete ingredient' }
@@ -17,7 +17,7 @@ sub execute {
       $_[0]->delete;
 
       say 'ingredient (' . $_[0]->name . ') deleted';
-   }, 'ingredient', $args->[0], $self->app->app->schema->resultset('Ingredient'));
+   }, 'ingredient', $args->[0], $self->rs('Ingredient'));
 }
 
 1;

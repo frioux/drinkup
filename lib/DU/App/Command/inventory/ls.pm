@@ -1,9 +1,9 @@
 package DU::App::Command::inventory::ls;
 
-use 5.14.1;
-use warnings;
+use 5.16.1;
+use Moo;
 
-use DU::App -command;
+extends 'DU::App::Command';
 
 sub abstract { 'list inventory' }
 
@@ -12,8 +12,8 @@ sub usage_desc { 'du ls' }
 sub execute {
    my ($self, $opt, $args) = @_;
 
-   my $rs = $self->app->app->schema
-     ->resultset('User')
+   my $rs = $self
+     ->rs('User')
      ->search({ 'me.name' => 'frew' })
      ->related_resultset('inventory_items')
      ->related_resultset('ingredient');

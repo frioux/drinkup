@@ -1,9 +1,9 @@
 package DU::App::Command::drink::show;
 
-use 5.14.1;
-use warnings;
+use 5.16.1;
+use Moo;
 
-use DU::App -command;
+extends 'DU::App::Command';
 use DU::Util qw(single_item drink_as_markdown);
 
 sub abstract { 'show drink' }
@@ -15,7 +15,7 @@ sub execute {
 
    single_item(sub {
       print drink_as_markdown($_[0])
-   }, 'drink', $args->[0], $self->app->app->schema->resultset('Drink'));
+   }, 'drink', $args->[0], $self->rs('Drink'));
 }
 
 1;
