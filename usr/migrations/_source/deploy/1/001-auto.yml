@@ -1,0 +1,635 @@
+---
+schema:
+  procedures: {}
+  tables:
+    drink_ingredients:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - drink_id
+            - ingredient_id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - drink_id
+          match_type: ''
+          name: drink_ingredients_fk_drink_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: drinks
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - ingredient_id
+          match_type: ''
+          name: drink_ingredients_fk_ingredient_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: ingredients
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - unit_id
+          match_type: ''
+          name: drink_ingredients_fk_unit_id
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields:
+            - id
+          reference_table: units
+          type: FOREIGN KEY
+      fields:
+        amount:
+          data_type: float
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: amount
+          order: 4
+          size:
+            - 0
+        arbitrary_amount:
+          data_type: nvarchar
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: arbitrary_amount
+          order: 5
+          size:
+            - 50
+        drink_id:
+          data_type: int
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: drink_id
+          order: 1
+          size:
+            - 0
+        ingredient_id:
+          data_type: int
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: ingredient_id
+          order: 2
+          size:
+            - 0
+        notes:
+          data_type: ntext
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: notes
+          order: 6
+          size:
+            - 0
+        unit_id:
+          data_type: int
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: unit_id
+          order: 3
+          size:
+            - 0
+      indices:
+        - fields:
+            - drink_id
+          name: drink_ingredients_idx_drink_id
+          options: []
+          type: NORMAL
+        - fields:
+            - ingredient_id
+          name: drink_ingredients_idx_ingredient_id
+          options: []
+          type: NORMAL
+        - fields:
+            - unit_id
+          name: drink_ingredients_idx_unit_id
+          options: []
+          type: NORMAL
+      name: drink_ingredients
+      options: []
+      order: 7
+    drink_names:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - drink_id
+            - order
+          match_type: ''
+          name: drink_names_drink_id_order
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+        - deferrable: 1
+          expression: ''
+          fields:
+            - name
+          match_type: ''
+          name: drink_names_name
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+        - deferrable: 1
+          expression: ''
+          fields:
+            - drink_id
+          match_type: ''
+          name: drink_names_fk_drink_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: drinks
+          type: FOREIGN KEY
+      fields:
+        drink_id:
+          data_type: int
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: drink_id
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: int
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+        name:
+          data_type: nvarchar
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: name
+          order: 3
+          size:
+            - 50
+        order:
+          data_type: float
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: order
+          order: 4
+          size:
+            - 0
+      indices:
+        - fields:
+            - drink_id
+          name: drink_names_idx_drink_id
+          options: []
+          type: NORMAL
+      name: drink_names
+      options: []
+      order: 5
+    drinks:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - variant_of_drink_id
+          match_type: ''
+          name: drinks_fk_variant_of_drink_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: drinks
+          type: FOREIGN KEY
+      fields:
+        description:
+          data_type: ntext
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: description
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: int
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+        source:
+          data_type: nvarchar
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: source
+          order: 3
+          size:
+            - 50
+        variant_of_drink_id:
+          data_type: int
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: variant_of_drink_id
+          order: 4
+          size:
+            - 0
+      indices:
+        - fields:
+            - variant_of_drink_id
+          name: drinks_idx_variant_of_drink_id
+          options: []
+          type: NORMAL
+      name: drinks
+      options: []
+      order: 1
+    ingredients:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - name
+          match_type: ''
+          name: ingredients_name
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+        - deferrable: 1
+          expression: ''
+          fields:
+            - kind_of_id
+          match_type: ''
+          name: ingredients_fk_kind_of_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: ingredients
+          type: FOREIGN KEY
+      fields:
+        description:
+          data_type: ntext
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: description
+          order: 5
+          size:
+            - 0
+        id:
+          data_type: int
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+        kind_of_id:
+          data_type: int
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: kind_of_id
+          order: 2
+          size:
+            - 0
+        materialized_path:
+          data_type: varchar
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: materialized_path
+          order: 3
+          size:
+            - 255
+        name:
+          data_type: nvarchar
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: name
+          order: 4
+          size:
+            - 50
+      indices:
+        - fields:
+            - kind_of_id
+          name: ingredients_idx_kind_of_id
+          options: []
+          type: NORMAL
+      name: ingredients
+      options: []
+      order: 2
+    inventory_items:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - ingredient_id
+            - user_id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - ingredient_id
+          match_type: ''
+          name: inventory_items_fk_ingredient_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: ingredients
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - user_id
+          match_type: ''
+          name: inventory_items_fk_user_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: users
+          type: FOREIGN KEY
+      fields:
+        ingredient_id:
+          data_type: int
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: ingredient_id
+          order: 1
+          size:
+            - 0
+        user_id:
+          data_type: int
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: user_id
+          order: 2
+          size:
+            - 0
+      indices:
+        - fields:
+            - ingredient_id
+          name: inventory_items_idx_ingredient_id
+          options: []
+          type: NORMAL
+        - fields:
+            - user_id
+          name: inventory_items_idx_user_id
+          options: []
+          type: NORMAL
+      name: inventory_items
+      options: []
+      order: 6
+    units:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - name
+          match_type: ''
+          name: units_name
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+      fields:
+        gills:
+          data_type: float
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: gills
+          order: 3
+          size:
+            - 0
+        id:
+          data_type: int
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+        name:
+          data_type: nvarchar
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: name
+          order: 2
+          size:
+            - 50
+      indices: []
+      name: units
+      options: []
+      order: 3
+    users:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - name
+          match_type: ''
+          name: users_name
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+      fields:
+        id:
+          data_type: int
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+        name:
+          data_type: nvarchar
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: name
+          order: 2
+          size:
+            - 50
+      indices: []
+      name: users
+      options: []
+      order: 4
+  triggers: {}
+  views: {}
+translator:
+  add_drop_table: 0
+  filename: ~
+  no_comments: 1
+  parser_args:
+    DBIx::Class::Schema: ~
+    DBIx::Schema: ~
+    package: DU::Schema
+    sources:
+      - User
+      - DrinkName
+      - InventoryItem
+      - Ingredient
+      - Drink
+      - Drink_Ingredient
+      - Unit
+  parser_type: SQL::Translator::Parser::DBIx::Class
+  producer_args:
+    no_transaction: 1
+  producer_type: SQL::Translator::Producer::YAML
+  show_warnings: 0
+  trace: 0
+  version: 0.11012
