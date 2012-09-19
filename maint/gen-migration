@@ -1,0 +1,40 @@
+#!/usr/bin/env perl
+
+use 5.16.1;
+use warnings;
+
+use rlib;
+
+use DU::DeploymentHandler;
+use DU::Schema;
+
+use SQL::Translator;
+use SQL::Translator::Producer::SQLite;
+$SQL::Translator::Producer::SQLite::NO_QUOTES = 0;
+
+my $d = DU::DeploymentHandler->new({
+   schema => 'DU::Schema',
+   databases => 'SQLite',
+   sql_translator_args => {
+      add_drop_table => 0,
+      no_comments => 1,
+      producer_args => { no_transaction => 1 },
+   },
+});
+
+if ($DU::Schema::VERSION > 1) {
+   $d->deploy_method->prepare_protoschema({
+      # Exclude __VERSION so that it gets installed separately
+      parser_args => {
+         sources => [grep { $_ ne '__VERSION' } DU::Schema->sources],
+      }
+   }, '_ddl_protoschema_produce_filename');
+
+   $d->prepare_upgrade({
+      from_version => $DU::Schema::VERSION - 1,
+      to_version => $DU::Schema::VERSION,
+   });
+} else {
+   $d->prepare_install
+}
+
