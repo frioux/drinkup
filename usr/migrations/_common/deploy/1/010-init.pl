@@ -5,7 +5,10 @@ use warnings;
 
 use DBIx::Class::DeploymentHandler::DeployMethod::SQL::Translator::ScriptHelpers 'schema_from_schema_loader';
 
-schema_from_schema_loader({ naming => 'v7' }, sub {
+schema_from_schema_loader({
+   naming => 'v7',
+   constraint => qr<^(?:units|users)$>i },
+sub {
    my ($schema, $version_set) = @_;
 
    $schema->resultset('Unit')->populate([
