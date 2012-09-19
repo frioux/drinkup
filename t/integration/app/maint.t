@@ -28,25 +28,10 @@ my $app2 = DU::App->new({
    },
 });
 
-subtest 'install' => sub {
-   my $result = test_app($app1 => [qw(maint install),]);
+subtest 'migrate' => sub {
+   my $result = test_app($app1 => [qw(maint migrate),]);
    stdout_is($result, [ 'done' ]);
-   is($app1->schema->resultset('Drink')->count, 3, 'drinks correctly seeded');
-};
-
-subtest 'install --no-seeding' => sub {
-   my $result = test_app($app2 => [qw(maint install --no-seeding),]);
-   stdout_is($result, [ 'done' ]);
-   is($app2->schema->resultset('Drink')->count, 0, 'drinks correctly unseeded');
-
-   $app2->schema->resultset('Unit')->populate([
-      [qw(name gills)],
-      [ounce      => 1 / 4         ] ,
-      [tablespoon => 1 / 4 / 2     ] ,
-      [teaspoon   => 1 / 4 / 2 / 3 ] ,
-      [dash       => undef         ] ,
-   ]);
-
+   is($app1->schema->resultset('Unit')->count, 4, 'units correctly seeded');
 };
 
 my (undef, $filename) = tempfile(OPEN => 0);
