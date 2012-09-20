@@ -39,6 +39,13 @@ subtest 'new' => sub {
    local $ENV{EDITOR} = 'ingredient-new-2';
    $result = test_app($app => [qw(ingredient new)]);
    stdout_is($result, [ 'ingredient (metal coins) created' ], 'without isa');
+
+   local $ENV{EDITOR} = 'ingredient-new-3';
+   $result = test_app($app => [qw(ingredient new --add-to-inventory)]);
+   stdout_is($result, [
+      'ingredient (Flesh) created',
+      'ingredient (Flesh) added to inventory',
+   ], '--add-to-inventory');
 };
 
 subtest 'ls' => sub {
@@ -57,6 +64,7 @@ subtest 'ls' => sub {
       ' * coin',
       ' * copper coins',
       ' * metal coins',
+      ' * Flesh',
    ]);
 };
 

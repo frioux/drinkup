@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use 5.16.1;
+use warnings;
+
+my $file = shift;
+open my $fh, '>', $file;
+my $yml = <<'YML';
+---
+name: Flesh
+description: 1 lb
+YML
+print $fh $yml;
+close $fh;
