@@ -14,10 +14,12 @@ sub _glob_to_like {
 
    my $like = $kinda_like;
 
-   $like =~ s/\*/%/g;
-   $like =~ s/\?/_/g;
+   my $subst = 0;
+   $subst += $like =~ s/\*/%/g;
+   $subst += $like =~ s/\?/_/g;
 
-   return { -like => $like }
+   return { -like => $like } if $subst;
+   return $kinda_like
 }
 
 1;

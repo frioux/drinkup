@@ -1,7 +1,7 @@
--- 
+--
 -- Created by SQL::Translator::Producer::SQLite
 -- Created on Thu Jun 14 15:02:49 2012
--- 
+--
 
 --
 -- Table: "drinks"
@@ -23,35 +23,35 @@ CREATE TABLE "ingredients" (
   "id" INTEGER PRIMARY KEY NOT NULL,
   "kind_of_id" int,
   "materialized_path" varchar(255),
-  "name" nvarchar(50) NOT NULL,
+  "name" nvarchar(50) COLLATE NOCASE NOT NULL,
   "description" ntext,
   FOREIGN KEY ("kind_of_id") REFERENCES "ingredients"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE INDEX "ingredients_idx_kind_of_id" ON "ingredients" ("kind_of_id");
 
-CREATE UNIQUE INDEX "ingredients_name" ON "ingredients" ("name");
+CREATE UNIQUE INDEX "ingredients_name" ON "ingredients" ("name" COLLATE NOCASE);
 
 --
 -- Table: "units"
 --
 CREATE TABLE "units" (
   "id" INTEGER PRIMARY KEY NOT NULL,
-  "name" nvarchar(50) NOT NULL,
+  "name" nvarchar(50) COLLATE NOCASE NOT NULL,
   "gills" float
 );
 
-CREATE UNIQUE INDEX "units_name" ON "units" ("name");
+CREATE UNIQUE INDEX "units_name" ON "units" ("name" COLLATE NOCASE);
 
 --
 -- Table: "users"
 --
 CREATE TABLE "users" (
   "id" INTEGER PRIMARY KEY NOT NULL,
-  "name" nvarchar(50) NOT NULL
+  "name" nvarchar(50) COLLATE NOCASE NOT NULL
 );
 
-CREATE UNIQUE INDEX "users_name" ON "users" ("name");
+CREATE UNIQUE INDEX "users_name" ON "users" ("name" COLLATE NOCASE);
 
 --
 -- Table: "drink_names"
@@ -59,7 +59,7 @@ CREATE UNIQUE INDEX "users_name" ON "users" ("name");
 CREATE TABLE "drink_names" (
   "id" INTEGER PRIMARY KEY NOT NULL,
   "drink_id" int NOT NULL,
-  "name" nvarchar(50) NOT NULL,
+  "name" nvarchar(50) COLLATE NOCASE NOT NULL,
   "order" float NOT NULL,
   FOREIGN KEY ("drink_id") REFERENCES "drinks"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -68,7 +68,7 @@ CREATE INDEX "drink_names_idx_drink_id" ON "drink_names" ("drink_id");
 
 CREATE UNIQUE INDEX "drink_names_drink_id_order" ON "drink_names" ("drink_id", "order");
 
-CREATE UNIQUE INDEX "drink_names_name" ON "drink_names" ("name");
+CREATE UNIQUE INDEX "drink_names_name" ON "drink_names" ("name" COLLATE NOCASE);
 
 --
 -- Table: "inventory_items"
