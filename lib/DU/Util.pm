@@ -6,7 +6,7 @@ use warnings;
 use Sub::Exporter::Progressive -setup => {
    exports => [qw{
       ingredient_as_data volume_with_unit drink_as_markdown drink_as_data
-      single_item edit_data
+      single_item edit_data ingredient_as_markdown
    }],
 };
 use Lingua::EN::Inflect 'PL';
@@ -75,6 +75,25 @@ sub drink_as_data {
          }, $_[0]->links_to_drink_ingredients->all
       ],
    }
+}
+
+sub ingredient_as_markdown {
+   my $ingredient = shift;
+
+   return join "\n", '## ' . $ingredient->name,
+      '',
+      ( $ingredient->description ? (
+         '## Description',
+         '',
+         $ingredient->description,
+      ) : () ),
+      ( $ingredient->kind_of->count ? (
+         'Kind of: ' . join ', ', map $_->name, $ingredient->kind_of->all,
+      ) : () ),
+      ( $ingredient->kinds->count ? (
+         'Kinds: ' . join ', ', map $_->name, $ingredient->kinds->all,
+      ) : () ),
+      "",
 }
 
 sub ingredient_as_data {

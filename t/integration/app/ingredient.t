@@ -27,7 +27,8 @@ subtest 'help' => sub {
     '      edit: edit ingredient',
     '        ls: list ingredients',
     '       new: create new ingredient',
-    '        rm: delete ingredient'
+    '        rm: delete ingredient',
+    '      show: show ingredient',
    ]);
 };
 
@@ -85,6 +86,16 @@ subtest 'edit' => sub {
 subtest 'rm' => sub {
    my $result = test_app($app => [qw(ingredient rm), 'simple syrup']);
    stdout_is($result, [ 'ingredient (Simple Syrup) deleted' ]);
+};
+
+subtest 'show' => sub {
+   my $result = test_app($app => [qw(ingredient show), 'dark rum']);
+   stdout_is($result, [
+      '## Dark Rum',
+      '',
+      'Kind of: Dark Rum',
+      'Kinds: Dark Rum',
+   ]);
 };
 
 done_testing;
