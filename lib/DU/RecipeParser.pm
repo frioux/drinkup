@@ -3,7 +3,7 @@ package DU::RecipeParser;
 use 5.16.1;
 use warnings;
 
-use Pegex::Compiler;
+use Pegex;
 
 my $grammar = <<'PEGEX';
 %grammar drinkup
@@ -72,12 +72,7 @@ footer_name: / [<WORDS>-]+ /
 PEGEX
 
 sub parse {
-   Pegex::Parser->new(
-      grammar => Pegex::Grammar->new(
-         tree => Pegex::Compiler->new->compile($grammar)->tree,
-      ),
-      receiver => DU::RecipeParser::Data->new(),
-   )->parse($_[1]);
+   pegex($grammar, {receiver => 'DU::RecipeParser::Data'})->parse($_[1]);
 }
 
 package DU::RecipeParser::Data;
