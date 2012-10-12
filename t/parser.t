@@ -30,7 +30,7 @@ my $expected = {
    ingredients => [{
       amount => 4,
       ingredient => "Club Soda",
-      unit => "ounces"
+      unit => "ounce"
    }, {
       amount => 2,
       ingredient => "Gin",
@@ -39,11 +39,11 @@ my $expected = {
       amount => 1,
       ingredient => "Lemon Juice",
       note => "fresh is good",
-      unit => "Ounce"
+      unit => "ounce"
    }, {
       amount => 1,
       ingredient => "Simple Syrup",
-      unit => "tbsp"
+      unit => "tablespoon"
    }],
    name => "Tom Collins",
    source => "500 Cocktails, p27"
@@ -60,10 +60,10 @@ Refreshing.
 Drink it at a wedding.
 
  * 4 ounces of Club Soda
- * 2 ounce of Gin
- * 1 Ounce of Lemon Juice
+ * 2 ounces of Gin
+ * 1 ounce of Lemon Juice
  # fresh is good
- * 1 tbsp of Simple Syrup
+ * 1 tablespoon of Simple Syrup
 
 Source: 500 Cocktails, p27
 RECIPE2

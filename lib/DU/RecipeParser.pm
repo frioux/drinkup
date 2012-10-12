@@ -10,6 +10,7 @@ use Sub::Exporter::Progressive -setup => {
     default => [qw( decode_recipe encode_recipe )],
   },
 };
+use Lingua::EN::Inflect 'PL';
 
 my $grammar = <<'PEGEX';
 %grammar drinkup
@@ -56,9 +57,15 @@ number: /(
    (: ~ <PLUS>? ~ <DIGIT>+ ~ <SLASH> ~ <DIGIT>+ )?
 )/
 
-# this will probably need a hardcoded list at some point :(
-# BLKB: Or maybe use a validator?  depends on the size of the list
-unit:   /(<WORD>+)(: ~ of)?/
+ounce: /(?i:ounces? | oz)/
+
+tablespoon: /(?i:tbsp|tablespoons?|(?-i:T\s))/
+
+teaspoon: /(?i:tsp|teaspoons?|(?-i:t\s))/
+
+dash: /(?i:dash(:es)?)/
+
+unit:   (<ounce>|<tablespoon>|<teaspoon>|<dash>)/(?i: ~ of)?/
 
 name:   / (<ANY>+?) ~ (= <EOL>) /
 
@@ -85,7 +92,8 @@ sub encode_recipe {
    my $ingredients;
 
    for my $i (@{$_[0]->{ingredients}}) {
-      $ingredients .= " * $i->{amount} $i->{unit} of $i->{ingredient}\n";
+      $ingredients .= " * $i->{amount} " . PL($i->{unit}, $i->{amount})
+         . " of $i->{ingredient}\n";
       $ingredients .= " # $i->{note}\n" if $i->{note};
    }
 
@@ -109,9 +117,16 @@ sub initial {
     $data = {};
 }
 
+sub got_unit { $_[1]->[0] }
+
 sub got_cocktail {
     $data->{name} = $_[1];
 }
+
+sub got_ounce { 'ounce' }
+sub got_tablespoon { 'tablespoon' }
+sub got_teaspoon { 'teaspoon' }
+sub got_dash { 'dash' }
 
 sub got_description {
     $data->{description} = $_[1];

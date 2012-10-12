@@ -18,6 +18,7 @@ requires 'Module::Load';
 requires 'Sub::Exporter::Progressive';
 requires 'Test::Exit';
 requires 'JSON';
+requires 'Lingua::EN::Inflect';
 
 name        'Drinkup';
 author      'Arthur Axel fREW Schmidt <frioux@gmail.com>';
