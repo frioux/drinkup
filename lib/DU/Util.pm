@@ -126,18 +126,27 @@ sub single_item {
 
 sub edit_data {
    my $data = shift;
+   my $opt = shift || {};
+
+   my $in = $opt->{in} || sub {
+      require YAML::Syck;
+      YAML::Syck::Dump($_[0]);
+   };
+
+   my $out = $opt->{out} || sub {
+      require YAML::Syck;
+      YAML::Syck::Load($_[0])
+   };
 
    require File::Temp;
-   require YAML::Syck;
-
    my ($fh, $fn) = File::Temp::tempfile();
-   print {$fh} YAML::Syck::Dump($data);
+   print {$fh} $in->($data);
    close $fh;
 
    system($ENV{EDITOR} || 'vi', $fn);
 
-   my $yaml = do { local (@ARGV, $/) = $fn; <> };
-   YAML::Syck::Load($yaml);
+   my $raw = do { local (@ARGV, $/) = $fn; <> };
+   $out->($raw)
 }
 
 1;
