@@ -43,7 +43,7 @@ subtest 'ls' => sub {
 
 subtest 'new' => sub {
    local $ENV{EDITOR} = 'drink-new-1';
-   my $result = test_app($app => [qw(drink new frew)]);
+   my $result = test_app($app => [qw(drink new -Y frew)]);
    stdout_is($result, [
       '## Awesome bevvy',
       '',
@@ -62,7 +62,7 @@ subtest 'new' => sub {
    ]);
 
    local $ENV{EDITOR} = 'drink-new-2';
-   $result = test_app($app => [qw(drink new -b), 'Awesome bevvy']);
+   $result = test_app($app => [qw(drink new -Yb), 'Awesome bevvy']);
    stdout_is($result, [
       '## Awesome bevvy2',
       '',
@@ -83,7 +83,7 @@ subtest 'new' => sub {
 
 subtest 'new --based_on' => sub {
    local $ENV{EDITOR} = 'drink-new-based-on';
-   my $result = test_app($app => [qw(drink new --based_on), 'Awesome bevvy']);
+   my $result = test_app($app => [qw(drink new --from_yaml --based_on), 'Awesome bevvy']);
    stdout_is($result, [
       '## silly new name',
       '',

@@ -5,6 +5,7 @@ use Moo;
 
 extends 'DU::App::Command';
 use DU::Util qw(edit_data drink_as_data single_item drink_as_markdown);
+use DU::RecipeParser;
 
 sub abstract { 'create new drink' }
 
@@ -12,6 +13,8 @@ sub usage_desc { 'du drink new $drink' }
 
 sub opt_spec {
    [ 'based_on|b=s',  'the drink to base the new drink on' ],
+   [ 'from_yaml|Y',   'use YAML to specify the drink' ],
+   #[ 'from-recipe|R',   'use .recipe to specify the drink' ],
 }
 
 sub execute {
@@ -49,7 +52,12 @@ sub execute {
    }
 
    my $i = $self->schema->create_drink(
-      edit_data($create)
+      $opt->from_yaml
+         ? edit_data($create)
+         : edit_data($create, {
+            out => sub { decode_recipe($_[0]) },
+            in  => sub { encode_recipe($_[0]) },
+         })
    );
 
    $i->discard_changes;

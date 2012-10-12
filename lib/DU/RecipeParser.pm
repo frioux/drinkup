@@ -4,6 +4,12 @@ use 5.16.1;
 use warnings;
 
 use Pegex;
+use Sub::Exporter::Progressive -setup => {
+  exports => [qw( decode_recipe encode_recipe )],
+  groups => {
+    default => [qw( decode_recipe encode_recipe )],
+  },
+};
 
 my $grammar = <<'PEGEX';
 %grammar drinkup
@@ -71,8 +77,27 @@ metadata: / (<footer_name>) <COLON> <SPACE>* (<ANY>+?) ~ <EOL> /
 footer_name: / [<WORDS>-]+ /
 PEGEX
 
-sub parse {
-   pegex($grammar, {receiver => 'DU::RecipeParser::Data'})->parse($_[1]);
+sub decode_recipe {
+   pegex($grammar, {receiver => 'DU::RecipeParser::Data'})->parse($_[0]);
+}
+
+sub encode_recipe {
+   my $ingredients;
+
+   for my $i (@{$_[0]->{ingredients}}) {
+      $ingredients .= " * $i->{amount} $i->{unit} of $i->{ingredient}\n";
+      $ingredients .= " # $i->{note}\n" if $i->{note};
+   }
+
+   my $source = "Source: $_[0]->{source}" if $_[0]->{source};
+
+<<"RECIPE";
+$_[0]->{name}
+
+$_[0]->{description}
+$ingredients
+$source
+RECIPE
 }
 
 package DU::RecipeParser::Data;
