@@ -111,7 +111,7 @@ subtest 'rm' => sub {
 
 subtest 'edit' => sub {
    local $ENV{EDITOR} = 'drink-edit-1';
-   my $result = test_app($app => [qw(drink edit), 'frewba libre']);
+   my $result = test_app($app => [qw(drink edit -Y), 'frewba libre']);
    stdout_is($result, [
       '## Frewba Libre',
       '',
