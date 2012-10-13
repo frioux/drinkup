@@ -79,6 +79,29 @@ subtest 'new' => sub {
       '',
       'drink (Awesome bevvy2) created',
    ]);
+
+   local $ENV{EDITOR} = 'drink-new-recipe-1';
+   $result = test_app($app => [qw(drink new stuplidly-ignored)]);
+   stdout_is($result, [
+      '## Blood Wallet',
+      '',
+      '## Ingredients',
+      '',
+      ' * 1 ounce of Wallet',
+      ' * 2 tablespoons of Blood',
+      '',
+      '## Description',
+      '',
+      'This is a thing from a song by Godspeed! You Black Emperor.',
+      '',
+      q(I'm not actually much of a fan.),
+      '',
+      '',
+      q(Source: my brain, sector 5),
+      '',
+      '',
+      'drink (Blood Wallet) created',
+   ]);
 };
 
 subtest 'new --based_on' => sub {
@@ -128,6 +151,33 @@ subtest 'edit' => sub {
       '',
       '',
       'drink (Frewba Libre) updated',
+   ]);
+
+
+   my $app = A->app;
+
+   local $ENV{EDITOR} = 'drink-edit-recipe-1';
+   $result = test_app($app => [qw(drink edit), 'cuba libre']);
+   stdout_is($result, [
+      '## Face Mask',
+      '',
+      '## Ingredients',
+      '',
+      ' * 1 ounce of plastic',
+      ' * 2 teaspoons of humanish rubber',
+      '',
+      '## Description',
+      '',
+      "It's a mask of your own face.  Could a halloween mask",
+      'be any better than that?',
+      '',
+      '',
+      'Variants: Frewba Libre',
+      '',
+      'Source: my brain, sector 6',
+      '',
+      '',
+      'drink (Face Mask) updated',
    ]);
 };
 

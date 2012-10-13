@@ -97,7 +97,8 @@ sub encode_recipe {
       $ingredients .= " # $i->{note}\n" if $i->{note};
    }
 
-   my $source = "Source: $_[0]->{source}" if $_[0]->{source};
+   my $source = '';
+   $source = "Source: $_[0]->{source}" if $_[0]->{source};
 
 <<"RECIPE";
 $_[0]->{name}

@@ -60,7 +60,7 @@ sub update {
    for (@{$data->{ingredients}}) {
       my @unit;
       if ($_->{unit}) {
-         my $unit_id = $self->app->app->schema->resultset('Unit')
+         my $unit_id = $self->result_source->schema->resultset('Unit')
             ->search({ name => $_->{unit} })
             ->get_column('id')
             ->single

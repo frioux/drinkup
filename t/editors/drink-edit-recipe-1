@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+
+use 5.16.1;
+use warnings;
+
+my $file = shift;
+open my $fh, '>', $file;
+my $recipe = <<'RECIPE';
+Face Mask
+
+It's a mask of your own face.  Could a halloween mask
+be any better than that?
+
+ * 1 oz of plastic
+ * 2 t humanish rubber
+
+Source: my brain, sector 6
+RECIPE
+print $fh $recipe;
+close $fh;
