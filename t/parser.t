@@ -26,7 +26,7 @@ Source: 500 Cocktails, p27
 RECIPE
 
 my $expected = {
-   description => "This is a delicious beverage for a hot day.\nRefreshing.\n\nDrink it at a wedding.\n",
+   description => "This is a delicious beverage for a hot day.\nRefreshing.\n\nDrink it at a wedding.",
    ingredients => [{
       amount => 4,
       name => "Club Soda",

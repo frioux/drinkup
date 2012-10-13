@@ -104,6 +104,7 @@ sub encode_recipe {
 $_[0]->{name}
 
 $_[0]->{description}
+
 $ingredients
 $source
 RECIPE
@@ -130,6 +131,7 @@ sub got_teaspoon { 'teaspoon' }
 sub got_dash { 'dash' }
 
 sub got_description {
+    $_[1] =~ s/\s$//g;
     $data->{description} = $_[1];
 }
 
