@@ -31,8 +31,8 @@ cocktail: /
 
 description: /
     (<ALL>*?)       # Description text
-    (= <EOL> <BLANK>* <STAR> ) # Not the ingredients
-    ~               # Remaining whitespace
+    <EOL>+
+    (= <BLANK>* <STAR> ) # Not the ingredients
 /
 
 # Ingredient parts
@@ -131,7 +131,6 @@ sub got_teaspoon { 'teaspoon' }
 sub got_dash { 'dash' }
 
 sub got_description {
-    $_[1] =~ s/\s$//g;
     $data->{description} = $_[1];
 }
 
