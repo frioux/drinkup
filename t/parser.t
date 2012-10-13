@@ -29,20 +29,20 @@ my $expected = {
    description => "This is a delicious beverage for a hot day.\nRefreshing.\n\nDrink it at a wedding.\n",
    ingredients => [{
       amount => 4,
-      ingredient => "Club Soda",
+      name => "Club Soda",
       unit => "ounce"
    }, {
       amount => 2,
-      ingredient => "Gin",
+      name => "Gin",
       unit => "ounce"
    }, {
       amount => 1,
-      ingredient => "Lemon Juice",
+      name => "Lemon Juice",
       note => "fresh is good",
       unit => "ounce"
    }, {
       amount => 1,
-      ingredient => "Simple Syrup",
+      name => "Simple Syrup",
       unit => "tablespoon"
    }],
    name => "Tom Collins",

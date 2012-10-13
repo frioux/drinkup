@@ -93,7 +93,7 @@ sub encode_recipe {
 
    for my $i (@{$_[0]->{ingredients}}) {
       $ingredients .= " * $i->{amount} " . PL($i->{unit}, $i->{amount})
-         . " of $i->{ingredient}\n";
+         . " of $i->{name}\n";
       $ingredients .= " # $i->{note}\n" if $i->{note};
    }
 
@@ -141,7 +141,7 @@ sub got_ingredients {
         map +{
            amount => 0 + $_->[0],
            unit => $_->[1],
-           ingredient => $_->[2],
+           name => $_->[2],
            ($_->[3] ? (note => $_->[3]) : ()),
         }, @{$_[1]}
     ];
