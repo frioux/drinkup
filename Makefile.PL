@@ -28,6 +28,7 @@ repository  'git://github.com/frioux/drinkup';
 
 all_from    'lib/DU.pm';
 
+install_share;
 install_script (qw|
   bin/dup
 |);

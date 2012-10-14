@@ -3,6 +3,7 @@ package DU::RecipeParser;
 use 5.16.1;
 use warnings;
 
+use DU;
 use Pegex;
 use Sub::Exporter::Progressive -setup => {
   exports => [qw( decode_recipe encode_recipe )],
@@ -11,78 +12,10 @@ use Sub::Exporter::Progressive -setup => {
   },
 };
 use Lingua::EN::Inflect 'PL';
+use File::Share ':all';
+use IO::All;
 
-my $grammar = <<'PEGEX';
-%grammar drinkup
-%version 0.0.1
-
-recipe:
-    cocktail
-    description
-    ingredients
-    instructions?
-    footers
-
-cocktail: /
-    (: ~ <EOL> )?   # Leading whitespace?
-    (<NS> <ANY>*?)  # Cocktail name. Capture it.
-    ~ <EOL>         # Trailing whitespace
-/
-
-description: /
-    (<ALL>*?)       # Description text
-    <EOL>+
-    (= <BLANK>* <STAR> ) # Not the ingredients
-/
-
-# Ingredient parts
-ingredients: ingredient+
-
-ingredient:
-    / <SPACE>* <STAR> <SPACE>* /
-    number
-    / <SPACE>* /
-    unit
-    / <SPACE>* /
-    name
-    / <SPACE>* <EOL> /
-    note?
-
-# probably need to attempt to parse 1 1/2 or 1 + 1/2
-# cribbed from json-pgx, minus the exponent version because if you use that
-# in a recipe you should change your units!
-number: /(
-   (: 0 | [1-9] <DIGIT>* )?
-   (: <DOT> <DIGIT>+ )?
-   (: ~ <PLUS>? ~ <DIGIT>+ ~ <SLASH> ~ <DIGIT>+ )?
-)/
-
-ounce: /(?i:ounces? | oz)/
-
-tablespoon: /(?i:tbsp|tablespoons?|(?-i:T\s))/
-
-teaspoon: /(?i:tsp|teaspoons?|(?-i:t\s))/
-
-dash: /(?i:dash(:es)?)/
-
-unit:   (<ounce>|<tablespoon>|<teaspoon>|<dash>)/(?i: ~ of)?/
-
-name:   / (<ANY>+?) ~ (= <EOL>) /
-
-note:   / <HASH> <SPACE>* (<ANY>+?) <SPACE>* <EOL> /
-
-instructions: /
-   (<ALL>*?)         # instruction text
-   (= <EOL> <footer_name> <COLON> ) # Not the footers
-   ~
-/
-
-footers: metadata+
-
-metadata: / (<footer_name>) <COLON> <SPACE>* (<ANY>+?) ~ <EOL> /
-
-footer_name: / [<WORDS>-]+ /
-PEGEX
+my $grammar = io->file(dist_file('DU', 'drinkup.pgx'))->all;
 
 sub decode_recipe {
    pegex($grammar, {receiver => 'DU::RecipeParser::Data'})->parse($_[0]);
