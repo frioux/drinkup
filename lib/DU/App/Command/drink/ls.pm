@@ -14,6 +14,8 @@ sub opt_spec {
    [ 'no_ingredients|n',  'only drinks I cannot make at all' ],
    [ 'all_ingredients|a',  'only drinks I can make' ],
    [ 'nearly_all_ingredients|e=i',  'drinks I can nearly make' ],
+   [ 'easy_search_by_name|G=s',  'drinks that match a name, automatically wraps with *s' ],
+   [ 'search_by_name|g=s',  'drinks that match a name (for example *breeze*)' ],
 }
 
 sub execute {
@@ -24,6 +26,12 @@ sub execute {
    my $user = $self->rs('User')->search({
       name => 'frew',
    })->single;
+
+   $rs = $rs->cli_find($opt->search_by_name)
+      if $opt->search_by_name;
+
+   $rs = $rs->cli_find('*' . $opt->easy_search_by_name . '*')
+      if $opt->easy_search_by_name;
 
    $rs = $rs->some($user) if $opt->some_ingredients;
    $rs = $rs->none($user) if $opt->no_ingredients;
