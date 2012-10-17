@@ -23,6 +23,7 @@ Drink it at a wedding.
 *1 tbsp of Simple Syrup
 
 Source: 500 Cocktails, p27
+Variant_of_Drink: foo
 RECIPE
 
 my $expected = {
@@ -46,7 +47,8 @@ my $expected = {
       unit => "tablespoon"
    }],
    name => "Tom Collins",
-   source => "500 Cocktails, p27"
+   source => "500 Cocktails, p27",
+   variant_of_drink => "foo",
 };
 
 cmp_deeply(decode_recipe($tom_collins), $expected, 'Tom Collins');
@@ -66,5 +68,6 @@ Drink it at a wedding.
  * 1 tablespoon of Simple Syrup
 
 Source: 500 Cocktails, p27
+Variant_of_Drink: foo
 RECIPE2
 done_testing;

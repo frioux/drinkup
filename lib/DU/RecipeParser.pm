@@ -20,7 +20,6 @@ recipe:
     cocktail
     description
     ingredients
-    instructions?
     footers
 
 cocktail: /
@@ -71,12 +70,6 @@ name:   / (<ANY>+?) ~ (= <EOL>) /
 
 note:   / <HASH> <SPACE>* (<ANY>+?) <SPACE>* <EOL> /
 
-instructions: /
-   (<ALL>*?)         # instruction text
-   (= <EOL> <footer_name> <COLON> ) # Not the footers
-   ~
-/
-
 footers: metadata+
 
 metadata: / (<footer_name>) <COLON> <SPACE>* (<ANY>+?) ~ <EOL> /
@@ -99,6 +92,9 @@ sub encode_recipe {
 
    my $source = '';
    $source = "Source: $_[0]->{source}" if $_[0]->{source};
+   my $variant = '';
+   $variant = "Variant_of_Drink: $_[0]->{variant_of_drink}"
+      if $_[0]->{variant_of_drink};
 
 <<"RECIPE";
 $_[0]->{name}
@@ -107,6 +103,7 @@ $_[0]->{description}
 
 $ingredients
 $source
+$variant
 RECIPE
 }
 
