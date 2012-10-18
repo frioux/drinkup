@@ -19,7 +19,7 @@ my $grammar = <<'PEGEX';
 recipe:
     cocktail
     description
-    ingredients
+    ingredients ~
     footers
 
 cocktail: /
@@ -68,7 +68,7 @@ unit:   (<ounce>|<tablespoon>|<teaspoon>|<dash>)/(?i: ~ of)?/
 
 name:   / (<ANY>+?) ~ (= <EOL>) /
 
-note:   / <HASH> <SPACE>* (<ANY>+?) <SPACE>* <EOL> /
+note:   / <SPACE>* <HASH> <SPACE>* (<ANY>+?) <SPACE>* <EOL> /
 
 footers: metadata+
 
