@@ -39,6 +39,36 @@ subtest 'ls' => sub {
       '* Cuba Libre',
       '* Frewba Libre',
    ]);
+
+   $result = test_app($app => [qw(drink ls -G lib)]);
+   stdout_is($result, [
+      '* Cuba Libre',
+      '* Frewba Libre',
+   ]);
+
+   $result = test_app($app => [qw(drink ls -g), '??ba libre']);
+   stdout_is($result, [
+      '* Cuba Libre',
+   ]);
+
+   $result = test_app($app => [qw(drink ls -s)]);
+   stdout_is($result, [
+      '* Tom Collins',
+   ]);
+
+   $result = test_app($app => [qw(drink ls -n)]);
+   stdout_is($result, [
+      '* Cuba Libre',
+      '* Frewba Libre',
+   ]);
+
+   $result = test_app($app => [qw(drink ls -a)]);
+   stdout_is($result, []);
+
+   $result = test_app($app => [qw(drink ls -e 1)]);
+   stdout_is($result, [
+      '* Tom Collins',
+   ]);
 };
 
 subtest 'new' => sub {

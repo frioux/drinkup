@@ -33,10 +33,14 @@ sub execute {
    $rs = $rs->cli_find('*' . $opt->easy_search_by_name . '*')
       if $opt->easy_search_by_name;
 
-   $rs = $rs->some($user) if $opt->some_ingredients;
-   $rs = $rs->none($user) if $opt->no_ingredients;
-   $rs = $rs->every($user) if $opt->all_ingredients;
-   $rs = $rs->nearly($user, $opt->nearly_all_ingredients ) if $opt->nearly_all_ingredients;
+   $rs = $rs->some_by_user_inventory($user) if $opt->some_ingredients;
+
+   $rs = $rs->none_by_user_inventory($user) if $opt->no_ingredients;
+
+   $rs = $rs->every_by_user($user) if $opt->all_ingredients;
+
+   $rs = $rs->nearly_by_user($user, $opt->nearly_all_ingredients )
+      if $opt->nearly_all_ingredients;
 
    say '* ' . $_->name for $rs->all
 }
