@@ -2,7 +2,7 @@
 
 package DU::WebApp;
 
-use 5.16.1;
+use 5.16.0;
 use Web::Simple;
 
 use DU::WebApp::Machine;

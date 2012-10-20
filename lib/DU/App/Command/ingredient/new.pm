@@ -1,6 +1,6 @@
 package DU::App::Command::ingredient::new;
 
-use 5.16.1;
+use 5.16.0;
 use Moo;
 
 extends 'DU::App::Command';

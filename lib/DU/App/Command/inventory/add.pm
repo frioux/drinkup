@@ -1,6 +1,6 @@
 package DU::App::Command::inventory::add;
 
-use 5.16.1;
+use 5.16.0;
 use Moo;
 
 extends 'DU::App::Command';

@@ -1,4 +1,4 @@
-use 5.16.1;
+use 5.16.0;
 use warnings;
 
 use Test::More;
@@ -70,7 +70,7 @@ tt(
    }
 );
 
-for my $method (qw(none some every)) {
+for my $method (qw(none_by_user_inventory some_by_user_inventory every_by_user)) {
    for my $retrieval (qw(count all)) {
       tt( "$method $retrieval" => sub {
          $s->resultset('Drink')->$method($user)->$retrieval
@@ -79,11 +79,11 @@ for my $method (qw(none some every)) {
 }
 
 tt( "nearly count" => sub {
-   $s->resultset('Drink')->nearly($user, 1)->count
+   $s->resultset('Drink')->nearly_by_user($user, 1)->count
 });
 
 tt( "nearly all" => sub {
-   $s->resultset('Drink')->nearly($user, 1)->all
+   $s->resultset('Drink')->nearly_by_user($user, 1)->all
 });
 
 sub tt {

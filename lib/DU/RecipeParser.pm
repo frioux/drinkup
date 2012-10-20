@@ -1,6 +1,6 @@
 package DU::RecipeParser;
 
-use 5.16.1;
+use 5.16.0;
 use warnings;
 
 use Pegex;

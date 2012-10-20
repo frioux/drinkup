@@ -1,6 +1,6 @@
 package DU::DeploymentHandler;
 
-use 5.16.1;
+use 5.16.0;
 use Moo;
 use DateTime;
 use DU::Util;

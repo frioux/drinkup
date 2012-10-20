@@ -1,6 +1,6 @@
 #!perl
 
-use 5.16.1;
+use 5.16.0;
 use warnings;
 
 use DBIx::Class::DeploymentHandler::DeployMethod::SQL::Translator::ScriptHelpers 'schema_from_schema_loader';

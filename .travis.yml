@@ -1,0 +1,20 @@
+language: perl
+perl:
+   - "5.16"
+
+install:
+   - export RELEASE_TESTING=1 AUTOMATED_TESTING=1 AUTHOR_TESTING=1 HARNESS_OPTIONS=j10:c HARNESS_TIMER=1
+   - sudo apt-get -y install liblzma-dev bc
+   - cpanm --quiet --notest Devel::Cover
+   - cpanm --quiet --notest --installdeps .
+   - cpanm --quiet --notest Module::Package Module::Package::Ingy
+   - git clone --depth=100 --quiet git://github.com/ingydotnet/pegex-pm.git /tmp/pegex-pm
+   - cd /tmp/pegex-pm
+   - perl Makefile.PL
+   - make install
+   - cd -
+
+script:
+   - PERL5OPT=-MDevel::Cover prove -lrsv t xt
+   - cover
+   - test "$(echo "$(cover -summary 2>/dev/null | tail -n6 | head -n1 | perl -pi -e '$_ = (split /\s+/)[7]') >= 95" | bc)" -ne 0
