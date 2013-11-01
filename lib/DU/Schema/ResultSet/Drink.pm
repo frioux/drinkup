@@ -1,12 +1,15 @@
 package DU::Schema::ResultSet::Drink;
 
 use 5.16.0;
-use warnings;
+use Moose;
+use MooseX::NonMoose;
 
-use parent 'DU::Schema::ResultSet';
+extends 'DU::Schema::ResultSet';
 
 use Carp 'croak';
 use Scalar::Util 'blessed';
+
+sub BUILDARGS { $_[2] }
 
 sub create {
    my ($self, $args) = @_;

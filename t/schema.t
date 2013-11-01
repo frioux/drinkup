@@ -169,4 +169,6 @@ subtest searches => sub {
    );
 };
 
+$s->resultset('Drink')->search(undef, { group_by => ['id'] })->count;
+
 done_testing;
