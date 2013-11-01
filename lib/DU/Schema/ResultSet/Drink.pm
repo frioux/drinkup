@@ -1,8 +1,7 @@
 package DU::Schema::ResultSet::Drink;
 
 use 5.16.0;
-use Moose;
-use MooseX::NonMoose;
+use Moo;
 
 extends 'DU::Schema::ResultSet';
 
