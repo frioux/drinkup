@@ -8,7 +8,7 @@ extends 'DU::Schema::ResultSet';
 use Carp 'croak';
 use Scalar::Util 'blessed';
 
-sub BUILDARGS { $_[2] }
+sub FOREIGNBUILDARGS { $_[2] }
 
 sub create {
    my ($self, $args) = @_;
